@@ -1,0 +1,24 @@
+
+<h3>{{ object.code }} :کد</h3>
+
+<h4>{{ object.month_start }}/{{ object.year_start }} :تاریخ شروع</h4>
+<h4>تاریخ پایان: {{ object.month_end }}/{{ object.year_end }}</h4>
+
+
+
+<a href="{% url 'schedules:semester-update' object.code %}">ویرایش</a>
+<a href="{% url 'schedules:semester-delete' object.code %}">حذف</a>
+
+
+<a href="{% url 'schedules:program-create' object.code %}">افزودن دوره جدید</a>
+
+{% if object.program_set.all %}
+    <h3>دوره‌های برگزار شده</h3>
+    {% for program in object.program_set.all %}
+        <a href="{% url 'schedules:program-detail' semester_code=object.code program_code=program.code %}">
+            <h4>{{ program.title }}</h4>
+        </a>
+    {% endfor %}
+{% else %}
+    <h3>دوره‌ای برگزار نشده است</h3>
+{% endif %}

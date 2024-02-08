@@ -1,0 +1,9 @@
+<a href="{% url 'schedules:semester-create' %}">ایجاد ترم جدید</a>
+
+{% for semester in object_list %}
+    <div>
+        <a href="{% url 'schedules:semester-detail' semester.code %}">
+            {{ semester.code }}
+        </a>
+    </div>
+{% endfor %}

@@ -1,0 +1,9 @@
+<a href="{% url 'schedules:program-title-create' %}">افزودن عنوان دوره جدید</a>
+
+{% for program_title in object_list %}
+    <div>
+        <p>{{ program_title.title }}</p>
+        <a href="{% url 'schedules:program-title-update' program_title.id %}">ویرایش</a>
+        <a href="{% url 'schedules:program-title-delete' program_title.id %}">حذف</a>
+    </div>
+{% endfor %}
