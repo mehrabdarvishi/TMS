@@ -1,4 +1,3 @@
-from collections.abc import Iterable
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -20,8 +19,6 @@ class CourseTitle(models.Model):
 
 # ترم
 class Semester(models.Model):
-
-    month_validators = [MinValueValidator(1), MaxValueValidator(12)]
 
     MONTH_CHOICES = {
         1:'فروردین',
