@@ -1,12 +1,9 @@
-from django.shortcuts import render, redirect
+from django.db.models.base import Model as Model
 from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-from django.contrib import messages
 from .models import Instructor, Semester, Program, Course, CourseSession, ProgramTitle, CourseTitle
-from .forms import ProgramForm
-from .utils import get_program
 
 
 class SemesterCreateView(CreateView):
@@ -38,86 +35,58 @@ class SemesterDeleteView(DeleteView):
     slug_field = 'code'
     success_url = reverse_lazy('schedules:semester-list')
 
-
-
-def program_create(request, semester_code):
-    form = ProgramForm(request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            semester = Semester.objects.filter(code=semester_code)
-            if semester.exists():
-                semester = semester.first()
-                code, title = form.cleaned_data['code'], form.cleaned_data['title']
-                program = Program(code=code, title=title, semester=semester)
-                program.save()
-                return redirect('schedules:semester-detail', semester_code=semester.code)
-    else:
-        context = {
-            'form': form
-        }
-        return render(request, 'schedules/program_form.html', context=context)
-
-#class ProgramCreateView(CreateView):
-#    model = Program
-#    fields = ['code', 'title']
-
-#class ProgramDetailView(DetailView):
-#    model = Program
-#    slug_url_kwarg = 'code'
-#    slug_field = 'code'
+class ProgramCreateView(CreateView):
+    model = Program
+    fields = ['code', 'title']
     
-def program_detail(request, semester_code, program_code):
-    semester = Semester.objects.filter(code=semester_code)
-    if semester.exists():
-        semester = semester.first()
-        program = Program.objects.filter(code=program_code, semester=semester)
-        if program.exists():
-            program = program.first()
-            context = {
-                'program': program
-            }
-            return render(request, template_name='schedules/program_detail.html', context=context)
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        semester_code = self.kwargs.get('semester_code')
+        form.instance.semester = Semester.objects.get(code=semester_code)
+        return form
+    
+    def get_success_url(self) -> str:
+        semester_code = self.kwargs.get('semester_code')
+        return reverse_lazy('schedules:semester-detail', kwargs={'semester_code': semester_code})
 
+class ProgramDetailView(DetailView):
+    model = Program
 
-def program_update(request, semester_code, program_code):
-    if program := get_program(program_code, semester_code):
-        if request.method == 'POST':
-            form = ProgramForm(request.POST, instance=program)
-            if form.is_valid():
-                    form.save()
-                    return redirect('schedules:program-detail', semester_code=semester_code, program_code=form.cleaned_data.get('code'))
-        else:
-            form = ProgramForm(instance=program)
-            context = {
-                'form': form
-            }
-            return render(request, template_name='schedules/program_update_form.html', context=context)
+    def get_object(self) -> Model:
+        program_code, semester_code = self.kwargs.get('program_code'), self.kwargs.get('semester_code')
+        semester = Semester.objects.get(code=semester_code)
+        return Program.objects.get(code=program_code, semester=semester)
         
 
+class ProgramUpdateView(UpdateView):
+    model = Program
+    fields = ['code', 'title']
 
-def program_delete(request, semester_code, program_code):
-    if request.method == 'POST':
-        if program:=get_program(program_code, semester_code):
-            program.delete()
-            return redirect('schedules:semester-detail', semester_code=semester_code)
-    else:
-        if program:=get_program(program_code, semester_code):
-            context = {
-                'object': program
-            }
-            return render(request, 'schedules/program_confirm_delete.html', context)
+    def get_object(self) -> Model:
+        program_code, semester_code = self.kwargs.get('program_code'), self.kwargs.get('semester_code')
+        semester = Semester.objects.get(code=semester_code)
+        return Program.objects.get(code=program_code, semester=semester)
 
-#class ProgramUpdateView(UpdateView):
-#    model = Program
-#    fields = '__all__'
-#    slug_url_kwarg = 'semester_code'
-#    slug_field = 'code'
-#    template_name_suffix = '_update_form'
+    def get_success_url(self) -> str:
+        semester_code = self.kwargs.get('semester_code')
+        program_code = self.object.code
+        return reverse_lazy('schedules:program-detail', kwargs={'semester_code':semester_code, 'program_code':program_code})
 
+class ProgramDeleteView(DeleteView):
+    model = Program
 
+    def get_object(self) -> Model:
+        semester_code, program_code = self.kwargs.get('semester_code'), self.kwargs.get('program_code')
+        semester = Semester.objects.get(code=semester_code)
+        return Program.objects.get(code=program_code, semester=semester)
+
+    def get_success_url(self) -> str:
+        semester_code = self.kwargs.get('semester_code')
+        return reverse_lazy('schedules:semester-detail', kwargs={'semester_code':semester_code})
+    
 class CourseCreateView(CreateView):
     model = Course
-    fields = ['title', 'instructor', 'program', 'instructor_evaluation_grade']
+    fields = ['title', 'instructor', 'instructor_evaluation_grade']
 
 
 class CourseSessionCreateView(CreateView):
