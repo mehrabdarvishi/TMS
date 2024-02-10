@@ -3,9 +3,10 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+from django.contrib import messages
 from .models import Instructor, Semester, Program, Course, CourseSession, ProgramTitle, CourseTitle
 from .forms import ProgramForm
-
+from .utils import get_program
 
 
 class SemesterCreateView(CreateView):
@@ -39,7 +40,7 @@ class SemesterDeleteView(DeleteView):
 
 
 
-def create_program(request, semester_code):
+def program_create(request, semester_code):
     form = ProgramForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -56,9 +57,9 @@ def create_program(request, semester_code):
         }
         return render(request, 'schedules/program_form.html', context=context)
 
-class ProgramCreateView(CreateView):
-    model = Program
-    fields = ['code', 'title']
+#class ProgramCreateView(CreateView):
+#    model = Program
+#    fields = ['code', 'title']
 
 #class ProgramDetailView(DetailView):
 #    model = Program
@@ -79,29 +80,32 @@ def program_detail(request, semester_code, program_code):
 
 
 def program_update(request, semester_code, program_code):
-    semester_qs = Semester.objects.filter(code=semester_code)
-    if semester_qs.exists():
-        semester = semester_qs.first()
+    if program := get_program(program_code, semester_code):
         if request.method == 'POST':
-            form = ProgramForm(request.POST)
+            form = ProgramForm(request.POST, instance=program)
             if form.is_valid():
-                program_qs = Program.objects.filter(code=program_code, semester=semester)
-                if program_qs.exists():
-                    program = program_qs.first()
-                    updated_code, updated_title = form.cleaned_data.get('code'), form.cleaned_data.get('title')
-                    program.code = updated_code
-                    program.title = updated_title
-                    program.save()
-                    return redirect('schedules:program-detail', semester_code=semester.code, program_code=updated_code)
+                    form.save()
+                    return redirect('schedules:program-detail', semester_code=semester_code, program_code=form.cleaned_data.get('code'))
         else:
-            program_qs = Program.objects.filter(code=program_code, semester=semester)
-            if program_qs.exists():
-                form = ProgramForm(instance=program_qs.first())
-                context = {
-                    'form': form
-                }
-                return render(request, template_name='schedules/program_update_form.html', context=context)
+            form = ProgramForm(instance=program)
+            context = {
+                'form': form
+            }
+            return render(request, template_name='schedules/program_update_form.html', context=context)
         
+
+
+def program_delete(request, semester_code, program_code):
+    if request.method == 'POST':
+        if program:=get_program(program_code, semester_code):
+            program.delete()
+            return redirect('schedules:semester-detail', semester_code=semester_code)
+    else:
+        if program:=get_program(program_code, semester_code):
+            context = {
+                'object': program
+            }
+            return render(request, 'schedules/program_confirm_delete.html', context)
 
 #class ProgramUpdateView(UpdateView):
 #    model = Program

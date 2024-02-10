@@ -3,3 +3,5 @@
     {{ form.as_p }}
     <input type="submit" value="اعمال">
 </form>
+
+<a href="{% url 'schedules:semester-delete' object.code %}">حذف</a>
