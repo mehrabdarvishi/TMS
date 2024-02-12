@@ -3,4 +3,17 @@
 <h3>کد ترم {{ program.semester }}</h3>
 
 <a href="{% url 'schedules:program-update' semester_code=program.semester program_code=program.code %}">ویرایش اطلاعات دوره</a>
-<a href="{% url 'schedules:program-delete' semester_code=program.semester program_code=program.code %}">حذف دوره از ترم</a>
+<a href="{% url 'schedules:course-create' semester_code=program.semester program_code=program.code %}">افزودن درس جدید</a>
+
+{% if program.course_set.all %}
+    <h3>لیست درس‌های دوره در ترم {{ program.semester }}</h3>
+    {% for course in program.course_set.all %}
+        <h3>
+            <a href="{% url 'schedules:course-detail' semester_code=program.semester program_code=program.code id=course.id %}">
+                {{ course.title }}
+            </a>
+        </h3>
+    {% endfor %}
+{% else %}
+    <h3>درسی برای این ترم ثبت نشده است </h3>
+{% endif %}

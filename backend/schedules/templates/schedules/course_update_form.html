@@ -1,0 +1,7 @@
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="اعمال">
+</form>
+
+<a href="{% url 'schedules:course-delete' semester_code=course.program.semester program_code=course.program id=course.id %}">حذف</a>

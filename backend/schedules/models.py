@@ -2,8 +2,8 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Instructor(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(verbose_name='نام', max_length=30)
+    last_name = models.CharField(verbose_name='نام خانوادگی', max_length=30)
 
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'
@@ -16,6 +16,9 @@ class ProgramTitle(models.Model):
 
 class CourseTitle(models.Model):
     title = models.CharField(verbose_name='عنوان', max_length=80)
+
+    def __str__(self) -> str:
+        return self.title
 
 # ترم
 class Semester(models.Model):
@@ -56,10 +59,13 @@ class Program(models.Model):
     
 # درس
 class Course(models.Model):
-    title= models.ForeignKey(to=CourseTitle, on_delete=models.SET_NULL, null=True, blank=True)
-    instructor = models.ForeignKey(to=Instructor, on_delete=models.SET_NULL, null=True, blank=True)
-    program = models.ForeignKey(to=Program, on_delete=models.SET_NULL, null=True, blank=True)
-    instructor_evaluation_grade = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    title= models.ForeignKey(verbose_name='عنوان', to=CourseTitle, on_delete=models.SET_NULL, null=True, blank=True)
+    instructor = models.ForeignKey(verbose_name='مدرس', to=Instructor, on_delete=models.SET_NULL, null=True, blank=True)
+    program = models.ForeignKey(verbose_name='دوره', to=Program, on_delete=models.SET_NULL, null=True, blank=True)
+    instructor_evaluation_grade = models.IntegerField(verbose_name='نمره ارزیابی مدرس', validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f'{self.title} - {self.program}'
 
 class CourseSession(models.Model):
     WEEKDAY_CHOICES = [
@@ -77,3 +83,4 @@ class CourseSession(models.Model):
     start_time = models.TimeField(verbose_name='ساعت شروع')
     end_time = models.TimeField(verbose_name='ساعت پایان')
     weekday = models.CharField(verbose_name='روز هفته', max_length=1, choices=WEEKDAY_CHOICES)
+
