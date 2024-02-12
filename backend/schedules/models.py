@@ -78,9 +78,8 @@ class CourseSession(models.Model):
         ('ج', 'جمعه'),
     ]
 
-    course = models.ForeignKey(to=Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(verbose_name='درس', to=Course, on_delete=models.CASCADE)
     location = models.CharField(verbose_name='محل برگزاری', max_length=50, null=True, blank=True)
     start_time = models.TimeField(verbose_name='ساعت شروع')
     end_time = models.TimeField(verbose_name='ساعت پایان')
     weekday = models.CharField(verbose_name='روز هفته', max_length=1, choices=WEEKDAY_CHOICES)
-
