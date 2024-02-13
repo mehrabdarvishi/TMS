@@ -17,18 +17,20 @@ urlpatterns = [
 
 
     path('semester/<slug:semester_code>/program/<slug:program_code>/course/new/', views.CourseCreateView.as_view(), name='course-create'),
-    path('semester/<slug:semester_code>/program/<slug:program_code>/course/<int:id>/', views.CourseDetailView.as_view(), name='course-detail'),
-    path('semester/<slug:semester_code>/program/<slug:program_code>/course/<int:id>/update/', views.CourseUpdateView.as_view(), name='course-update'),
-    path('semester/<slug:semester_code>/program/<slug:program_code>/course/<int:id>/delete/', views.CourseDeleteView.as_view(), name='course-delete'),
+    path('semester/<slug:semester_code>/program/<slug:program_code>/course/<int:course_id>/', views.CourseDetailView.as_view(), name='course-detail'),
+    path('semester/<slug:semester_code>/program/<slug:program_code>/course/<int:course_id>/update/', views.CourseUpdateView.as_view(), name='course-update'),
+    path('semester/<slug:semester_code>/program/<slug:program_code>/course/<int:course_id>/delete/', views.CourseDeleteView.as_view(), name='course-delete'),
 
+
+    path('semester/<slug:semester_code>/program/<slug:program_code>/course/<int:course_id>/session/new/', views.CourseSessionCreateView.as_view(), name='course-session-create'),
+    path('semester/<slug:semester_code>/program/<slug:program_code>/course/<int:course_id>/session/<int:session_id>/update/', views.CourseSessionUpdateView.as_view(), name='course-session-update'),
+    path('semester/<slug:semester_code>/program/<slug:program_code>/course/<int:course_id>/session/<int:session_id>/delete/', views.CourseSessionDeleteView.as_view(), name='course-session-delete'),
 
 
     #path('semester/<slug:semester_code>/add-new-program', views.create_program, name='program-create'),
     #path('program/<slug:code>', views.ProgramDetailView.as_view(), name='program-detail'),
 
 
-
-    path('course-session/new/', views.CourseSessionCreateView.as_view(), name='create-course-session'),
     path('instructor/new/', views.InstructorCreateView.as_view(), name='instructor-create'),
     path('course-title/new/', views.CourseTitleCreateView.as_view(), name='course-title-create'),
     path('program-title/', views.ProgramTitleListView.as_view(), name='program-title-list'),

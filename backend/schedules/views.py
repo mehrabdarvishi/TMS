@@ -105,7 +105,7 @@ class CourseCreateView(CreateView):
 
 class CourseDetailView(DetailView):
     model = Course
-    pk_url_kwarg = 'id'
+    pk_url_kwarg = 'course_id'
 
     
 class CourseUpdateView(UpdateView):
@@ -114,17 +114,17 @@ class CourseUpdateView(UpdateView):
     template_name_suffix = '_update_form'
 
     def get_object(self) -> Model:
-        return Course.objects.get(id=self.kwargs.get('id'))
+        return Course.objects.get(id=self.kwargs.get('course_id'))
 
     def get_success_url(self) -> str:
-        semester_code, program_code, course_id = self.kwargs.get('semester_code'), self.kwargs.get('program_code'), self.kwargs.get('id')
-        return reverse_lazy('schedules:course-detail', kwargs={'semester_code':semester_code, 'program_code':program_code, 'id':course_id})
+        semester_code, program_code, course_id = self.kwargs.get('semester_code'), self.kwargs.get('program_code'), self.kwargs.get('course_id')
+        return reverse_lazy('schedules:course-detail', kwargs={'semester_code':semester_code, 'program_code':program_code, 'course_id':course_id})
 
 class CourseDeleteView(DeleteView):
     model = Course
 
     def get_object(self) -> Model:
-        return Course.objects.get(id=self.kwargs.get('id'))
+        return Course.objects.get(id=self.kwargs.get('course_id'))
 
     def get_success_url(self) -> str:
         kwargs = {
@@ -135,10 +135,58 @@ class CourseDeleteView(DeleteView):
 
 class CourseSessionCreateView(CreateView):
     model = CourseSession
-    template_name_prefix = 'course_session'
+    fields = ['location', 'start_time', 'end_time', 'weekday']
     template_name = 'schedules/course_session_form.html'
-    fields = ['course', 'location', 'start_time', 'end_time', 'weekday']
+    
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        course_id = self.kwargs.get('course_id')
+        form.instance.course = Course.objects.get(id=course_id)
+        return form
+    
+    def get_success_url(self) -> str:
+        semester_code, program_code, course_id = self.kwargs.get('semester_code'), self.kwargs.get('program_code'), self.kwargs.get('course_id')
+        return reverse_lazy('schedules:course-detail', kwargs={'semester_code': semester_code, 'program_code': program_code, 'course_id':course_id})
+
+class CourseSessionUpdateView(UpdateView):
+    model = CourseSession
+    fields = ['location', 'start_time', 'end_time', 'weekday']
+    template_name = 'schedules/course_session_update_form.html'
+
+    def get_object(self) -> Model:
+        # Getting the object using all of the url params (Instead of just using the course id.) for ensuring a completely valid url.
+        semester = Semester.objects.get(code=self.kwargs.get('semester_code'))
+        program = Program.objects.get(code=self.kwargs.get('program_code'), semester=semester)
+        course = Course.objects.get(id=self.kwargs.get('course_id'), program=program)
+        return CourseSession.objects.get(id=self.kwargs.get('session_id'), course=course)
+    
+    def get_success_url(self) -> str:
+        kwargs = {
+            'semester_code': self.kwargs.get('semester_code'),
+            'program_code': self.kwargs.get('program_code'),
+            'course_id': self.kwargs.get('course_id')
+        }
+        return reverse_lazy('schedules:course-detail', kwargs=kwargs)
+
+class CourseSessionDeleteView(DeleteView):
+    model = CourseSession
+    template_name = 'schedules/course_session_confirm_delete.html'
+
+    def get_object(self) -> Model:
+        semester = Semester.objects.get(code=self.kwargs.get('semester_code'))
+        program = Program.objects.get(code=self.kwargs.get('program_code'), semester=semester)
+        course = Course.objects.get(id=self.kwargs.get('course_id'), program=program)
+        session = CourseSession.objects.get(id=self.kwargs.get('session_id'), course=course)
+        return session
+    
+    def get_success_url(self) -> str:
+        kwargs = {
+            'semester_code': self.kwargs.get('semester_code'),
+            'program_code': self.kwargs.get('program_code'),
+            'course_id': self.kwargs.get('course_id'),
+        }
+        return reverse_lazy('schedules:course-detail', kwargs=kwargs)
 
 class InstructorCreateView(CreateView):
     model = Instructor

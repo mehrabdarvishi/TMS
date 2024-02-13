@@ -3,6 +3,27 @@
 <h3>مدرس: {{ course.instructor }}</h3>
 <h3>نمره مدرس: {% if course.instructor_evaluation_grade %}{{course.instructor_evaluation_grade}}{% else %}ثبت نشده{%endif%}</h3>
 
-<a href="{% url 'schedules:course-update' semester_code=course.program.semester program_code=course.program id=course.id %}">
+<a href="{% url 'schedules:course-update' semester_code=course.program.semester program_code=course.program course_id=course.id %}">
     ویرایش اطلاعات درس
 </a>
+
+<a href="{% url 'schedules:course-session-create' semester_code=course.program.semester program_code=course.program course_id=course.id %}">جلسه‌ی درسی جدید</a>
+
+
+{% with sessions=course.coursesession_set.all %}
+    {% if sessions %}
+        <h3>جلسه {{ sessions|length }}</h3>
+        {% for session in sessions %}
+            <h4>مکان: {{ session.location }}</h4>
+            <h4>تاریخ شروع: {{ session.start_time }}</h4>
+            <h4>تاریخ پایان: {{ session.end_time }}</h4>
+            <h4>روز: {{ session.get_weekday_display }}</h4>
+            <a href="{% url 'schedules:course-session-update' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}">ویرایش</a>
+            <a href="{% url 'schedules:course-session-delete' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}">حذف</a>
+
+            <hr>
+        {% endfor %}
+    {% else %}
+        <h3>.برای این درس، جلسه‌ای ثبت نشده است</h3>
+    {% endif %}
+{% endwith %}
