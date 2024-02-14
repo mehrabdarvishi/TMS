@@ -1,0 +1,98 @@
+   <div style="display: flex; flex-direction: column; gap: 2em;">
+    <div style="display: flex; flex-direction: row-reverse; gap: 2em; align-items: center;">
+        <div>شنبه</div>
+        {% for session in saturday_sessions %}
+            <div style="display: flex;">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>
+                        {{ session.course }}
+                    </div>
+                    <small>{{ session.start_time|date:'H:i' }} - {{ session.end_time|date:'H:i' }}</small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div style="display: flex; flex-direction: row-reverse; gap: 2em; align-items: center;">
+        <div>یک‌شنبه</div>
+        {% for session in sunday_sessions %}
+            <div style="display: flex;">
+                <div style="display: flex; flex-direction: column; align-items: center; width: {{ width }};">
+                    <div>
+                        {{ session.course }}
+                    </div>
+                    <small>{{ session.start_time|date:'H:i' }} - {{ session.end_time|date:'H:i' }}</small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div style="display: flex; flex-direction: row-reverse; gap: 2em; align-items: center;">
+        <div>دوشنبه</div>
+        {% for session in monday_sessions %}
+            <div style="display: flex;">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>
+                        {{ session.course }}
+                    </div>
+                    <small>{{ session.start_time|date:'H:i' }} - {{ session.end_time|date:'H:i' }}</small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div style="display: flex; flex-direction: row-reverse; gap: 2em; align-items: center;">
+        <div>سه‌شنبه</div>
+        {% for session in tuesday_sessions %}
+            <div style="display: flex;">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>
+                        {{ session.course }}
+                    </div>
+                    <small>{{ session.start_time|date:'H:i' }} - {{ session.end_time|date:'H:i' }}</small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+                
+<div style="display: flex; flex-direction: row-reverse; gap: 2em; align-items: center;">
+    <div>چهارشنبه</div>
+    {% for session in wednesday_sessions %}
+        <div style="display: flex;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div>
+                    {{ session.course }}
+                </div>
+                <small>{{ session.start_time|date:'H:i' }} - {{ session.end_time|date:'H:i' }}</small>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div style="display: flex; flex-direction: row-reverse; gap: 2em; align-items: center;">
+    <div>پنج‌شنبه</div>
+    {% for session in thursday_sessions %}
+        <div style="display: flex;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div>
+                    {{ session.course }}
+                </div>
+                <small>{{ session.start_time|date:'H:i' }} - {{ session.end_time|date:'H:i' }}</small>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+<div style="display: flex; flex-direction: row-reverse; gap: 2em; align-items: center;">
+    <div>جمعه</div>
+    {% for session in friday_sessions %}
+        <div style="display: flex;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div>
+                    {{ session.course }}
+                </div>
+                <small>{{ session.start_time|date:'H:i' }} - {{ session.end_time|date:'H:i' }}</small>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+   </div> 

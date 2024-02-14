@@ -27,6 +27,12 @@ urlpatterns = [
     path('semester/<slug:semester_code>/program/<slug:program_code>/course/<int:course_id>/session/<int:session_id>/delete/', views.CourseSessionDeleteView.as_view(), name='course-session-delete'),
 
 
+
+    path('semester/<slug:semester_code>/program/<slug:program_code>/schedule/', views.ProgramSchedule.as_view(), name='program-schedule'),
+
+
+
+
     #path('semester/<slug:semester_code>/add-new-program', views.create_program, name='program-create'),
     #path('program/<slug:code>', views.ProgramDetailView.as_view(), name='program-detail'),
 

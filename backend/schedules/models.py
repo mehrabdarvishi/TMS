@@ -65,7 +65,7 @@ class Course(models.Model):
     instructor_evaluation_grade = models.IntegerField(verbose_name='نمره ارزیابی مدرس', validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'{self.title} - {self.program}'
+        return self.title.title
 
 class CourseSession(models.Model):
     WEEKDAY_CHOICES = [
@@ -83,3 +83,11 @@ class CourseSession(models.Model):
     start_time = models.TimeField(verbose_name='ساعت شروع')
     end_time = models.TimeField(verbose_name='ساعت پایان')
     weekday = models.CharField(verbose_name='روز هفته', max_length=1, choices=WEEKDAY_CHOICES)
+
+    def duration_in_minutes(self):
+        start_minutes = self.start_time.hour*60 + self.start_time.minute
+        end_minutes = self. end_time.hour*60 + self.end_time.minute
+        return end_minutes - start_minutes
+    
+    def schedule_field_width(self):
+        return f'{self.duration_in_minutes()*1.7}px'

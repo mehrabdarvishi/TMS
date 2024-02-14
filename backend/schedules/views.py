@@ -1,7 +1,7 @@
-from typing import Any
+from django.shortcuts import render
 from django.db.models.base import Model as Model
-from django.db.models.query import QuerySet
 from django.urls import reverse, reverse_lazy
+from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -220,3 +220,22 @@ class CourseTitleCreateView(CreateView):
     template_name = 'schedules/course_title_form.html'
     fields = ['title']
     success_url = reverse_lazy('schedules:course-title-create')
+
+
+class ProgramSchedule(View):
+    def get(self, request, *args, **kwargs):
+        semester = Semester.objects.get(code=kwargs.get('semester_code'))
+        program = Program.objects.get(code=kwargs.get('program_code'), semester=semester)
+        courses = program.course_set.all()
+        program_sessions = CourseSession.objects.filter(course__in=courses).order_by('start_time')
+        context = {
+            'saturday_sessions': program_sessions.filter(weekday='ش'),
+            'sunday_sessions': program_sessions.filter(weekday='ی'),
+            'monday_sessions': program_sessions.filter(weekday='د'),
+            'tuesday_sessions': program_sessions.filter(weekday='س'),
+            'wednesday_sessions': program_sessions.filter(weekday='چ'),
+            'thursday_sessions': program_sessions.filter(weekday='پ'),
+            'friday_sessions': program_sessions.filter(weekday='ج'),
+            'width': '10em',
+        }
+        return render(request, 'schedules/program_schedule.html', context=context)

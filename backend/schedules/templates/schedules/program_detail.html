@@ -7,6 +7,7 @@
 
 {% if program.course_set.all %}
     <h3>لیست درس‌های دوره در ترم {{ program.semester }}</h3>
+    <h4><a href="{% url 'schedules:program-schedule' semester_code=program.semester program_code=program.code %}">دریافت برنامه هفتگی دوره</a></h4>
     {% for course in program.course_set.all %}
         <h3>
             <a href="{% url 'schedules:course-detail' semester_code=program.semester program_code=program.code course_id=course.id %}">
