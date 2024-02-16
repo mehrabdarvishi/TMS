@@ -1,12 +1,15 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.db.models.base import Model as Model
 from django.urls import reverse, reverse_lazy
 from django.views import View
+from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+import pandas as pd
+from io import BytesIO
 from .models import Instructor, Semester, Program, Course, CourseSession, ProgramTitle, CourseTitle
-
 
 class SemesterCreateView(CreateView):
     model = Semester
@@ -239,3 +242,32 @@ class ProgramSchedule(View):
             'width': '10em',
         }
         return render(request, 'schedules/program_schedule.html', context=context)
+    
+
+class ExportDataTemplateView(TemplateView):
+    template_name = 'schedules/export_data.html'
+
+def export_data_to_excel(request):
+    course_sessions = CourseSession.objects.values('course__program__semester__code', 'course__program__code', 'course__title__title', 'group', 'weekday', 'start_time', 'end_time', 'location', 'course__instructor__first_name', 'course__instructor__last_name', 'course__instructor_evaluation_grade')
+
+    df = pd.DataFrame.from_records(course_sessions)
+    df.rename(columns={
+        'course__program__semester__code': 'کد ترم',
+        'course__program__code': 'کد دوره',
+        'course__title__title': 'نام درس',
+        'group': 'شماره گروه',
+        'weekday': 'روز',
+        'start_time': 'ساعت شروع',
+        'end_time': 'ساعت پایان',
+        'location': 'محل برگزاری',
+        'course__instructor__first_name': 'نام استاد',
+        'course__instructor__last_name': 'نام خانوادگی استاد',
+        'course__instructor_evaluation_grade': 'نمره ارزیابی استاد'
+    }, inplace=True)
+
+    response = HttpResponse(content_type='application/xlsx')
+    response['Content-Disposition'] = f'attachment; filename="schedule_data.xlsx"'
+    with pd.ExcelWriter(response) as writer:
+        df.to_excel(writer, index=False)
+
+    return response

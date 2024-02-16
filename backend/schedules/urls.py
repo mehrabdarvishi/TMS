@@ -45,5 +45,9 @@ urlpatterns = [
     path('program-title/new', views.ProgramTitleCreateView.as_view(), name='program-title-create'),
 
 
+
+    path('export-data/', views.ExportDataTemplateView.as_view(), name='export-data'),
+    path('export-data/excel/', views.export_data_to_excel, name='export-data-to-excel'),
+
     #path('spreadsheet/upload/')
 ]
