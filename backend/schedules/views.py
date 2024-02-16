@@ -135,7 +135,7 @@ class CourseDeleteView(DeleteView):
 
 class CourseSessionCreateView(CreateView):
     model = CourseSession
-    fields = ['location', 'start_time', 'end_time', 'weekday']
+    fields = ['location', 'start_time', 'end_time', 'weekday', 'group']
     template_name = 'schedules/course_session_form.html'
     
 
@@ -151,7 +151,7 @@ class CourseSessionCreateView(CreateView):
 
 class CourseSessionUpdateView(UpdateView):
     model = CourseSession
-    fields = ['location', 'start_time', 'end_time', 'weekday']
+    fields = ['location', 'start_time', 'end_time', 'weekday', 'group']
     template_name = 'schedules/course_session_update_form.html'
 
     def get_object(self) -> Model:

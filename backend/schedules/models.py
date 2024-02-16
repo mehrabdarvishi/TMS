@@ -59,7 +59,7 @@ class Program(models.Model):
     
 # درس
 class Course(models.Model):
-    title= models.ForeignKey(verbose_name='عنوان', to=CourseTitle, on_delete=models.SET_NULL, null=True, blank=True)
+    title= models.ForeignKey(verbose_name='عنوان', to=CourseTitle, on_delete=models.CASCADE)
     instructor = models.ForeignKey(verbose_name='مدرس', to=Instructor, on_delete=models.SET_NULL, null=True, blank=True)
     program = models.ForeignKey(verbose_name='دوره', to=Program, on_delete=models.SET_NULL, null=True, blank=True)
     instructor_evaluation_grade = models.IntegerField(verbose_name='نمره ارزیابی مدرس', validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True)
@@ -79,6 +79,7 @@ class CourseSession(models.Model):
     ]
 
     course = models.ForeignKey(verbose_name='درس', to=Course, on_delete=models.CASCADE)
+    group = models.SmallIntegerField(verbose_name='گروه', validators=[MinValueValidator(1)], null=True, blank=True)
     location = models.CharField(verbose_name='محل برگزاری', max_length=50, null=True, blank=True)
     start_time = models.TimeField(verbose_name='ساعت شروع')
     end_time = models.TimeField(verbose_name='ساعت پایان')
