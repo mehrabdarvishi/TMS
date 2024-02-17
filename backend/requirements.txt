@@ -7,4 +7,3 @@ pytz==2024.1
 six==1.16.0
 sqlparse==0.4.4
 tzdata==2023.4
-XlsxWriter==3.1.9

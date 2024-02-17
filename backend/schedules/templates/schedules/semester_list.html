@@ -1,3 +1,6 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
 <a href="{% url 'schedules:semester-create' %}">ایجاد ترم جدید</a>
 
 {% for semester in object_list %}
@@ -7,3 +10,4 @@
         </a>
     </div>
 {% endfor %}
+{% endblock content %}

@@ -1,3 +1,6 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
 <a href="{% url 'schedules:program-title-create' %}">افزودن عنوان دوره جدید</a>
 
 {% for program_title in object_list %}
@@ -7,3 +10,4 @@
         <a href="{% url 'schedules:program-title-delete' program_title.id %}">حذف</a>
     </div>
 {% endfor %}
+{% endblock content %}
