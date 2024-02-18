@@ -1,13 +1,21 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<a href="{% url 'schedules:program-title-create' %}">افزودن عنوان دوره جدید</a>
-
-{% for program_title in object_list %}
-    <div>
-        <p>{{ program_title.title }}</p>
-        <a href="{% url 'schedules:program-title-update' program_title.id %}">ویرایش</a>
-        <a href="{% url 'schedules:program-title-delete' program_title.id %}">حذف</a>
+<a href="{% url 'schedules:program-title-create' %}" style="text-decoration: none; font-size: 1.5rem; display: block; text-align: center; margin-bottom: 3rem;">
+    <div style="background-color: rgb(0, 11, 77); color: #f1f1f1; width: 15rem; padding: 1rem; border-radius: 5px; margin-inline: auto;">
+        افزودن عنوان دوره جدید
     </div>
-{% endfor %}
+</a>
+
+<div style="display: flex; flex-direction: column; gap: 4rem; align-items: center;">
+    {% for program_title in object_list %}
+    <div style="display: flex; flex-direction: row-reverse; align-items: center; gap: 3rem;">
+        <p style="font-size: 1.5rem;">{{ program_title.title }}</p>
+        <div style="display: flex; gap: 1rem; font-size: 1.1rem; text-decoration: none;">
+            <a href="{% url 'schedules:program-title-delete' program_title.id %}" style="text-decoration: none;">حذف</a>
+            <a href="{% url 'schedules:program-title-update' program_title.id %}" style="text-decoration: none;">ویرایش</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock content %}

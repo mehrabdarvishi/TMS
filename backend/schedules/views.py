@@ -10,10 +10,11 @@ from django.views.generic.list import ListView
 import pandas as pd
 from io import BytesIO
 from .models import Instructor, Semester, Program, Course, CourseSession, ProgramTitle, CourseTitle
+from .utils import overlapping_sessions_wrapped
 
 class SemesterCreateView(CreateView):
     model = Semester
-    fields = ['code', 'month_start', 'year_start', 'month_end', 'year_end']
+    fields = ['code', 'day_start', 'month_start', 'year_start', 'day_end', 'month_end', 'year_end']
     success_url = reverse_lazy('schedules:semester-list')
 
 class SemesterListView(ListView):
@@ -232,14 +233,13 @@ class ProgramSchedule(View):
         courses = program.course_set.all()
         program_sessions = CourseSession.objects.filter(course__in=courses).order_by('start_time')
         context = {
-            'saturday_sessions': program_sessions.filter(weekday='ش'),
-            'sunday_sessions': program_sessions.filter(weekday='ی'),
-            'monday_sessions': program_sessions.filter(weekday='د'),
-            'tuesday_sessions': program_sessions.filter(weekday='س'),
-            'wednesday_sessions': program_sessions.filter(weekday='چ'),
-            'thursday_sessions': program_sessions.filter(weekday='پ'),
-            'friday_sessions': program_sessions.filter(weekday='ج'),
-            'width': '10em',
+            'saturday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='ش').all()),
+            'sunday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='ی').all()),
+            'monday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='د').all()),
+            'tuesday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='س').all()),
+            'wednesday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='چ').all()),
+            'thursday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='پ').all()),
+            'friday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='ج').all()),
         }
         return render(request, 'schedules/program_schedule.html', context=context)
     

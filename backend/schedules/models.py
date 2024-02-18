@@ -38,14 +38,21 @@ class Semester(models.Model):
         12:'اسفند',
     }
     year_validators = [MinValueValidator(1390), MaxValueValidator(1450)]
+    day_validator = [MinValueValidator(1), MaxValueValidator(31)]
     code = models.SlugField('کد', max_length=20)
+    day_start = models.IntegerField(verbose_name='روز شروع', validators=day_validator)
     month_start = models.PositiveSmallIntegerField(verbose_name='ماه شروع', choices=MONTH_CHOICES)
     year_start = models.IntegerField(verbose_name='سال شروع', validators=year_validators)
+    day_end = models.IntegerField(verbose_name='روز پایان', validators=day_validator)
     month_end = models.PositiveSmallIntegerField(verbose_name='ماه پایان' ,choices=MONTH_CHOICES)
     year_end = models.IntegerField(verbose_name='سال پایان', validators=year_validators)
 
+
     def __str__(self) -> str:
         return self.code
+    
+    class Meta:
+        ordering = ['year_start', 'month_start']
 
 # دوره
 class Program(models.Model):

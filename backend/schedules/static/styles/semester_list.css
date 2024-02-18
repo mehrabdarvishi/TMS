@@ -1,0 +1,30 @@
+.new-semester {
+    margin-bottom: 3em;
+}
+
+.new-semester a {
+    font-size: 1.1em;
+    text-decoration: none;
+    color: #0032d8;
+}
+
+.semester-list {
+    display: flex;
+    gap: 2em;
+    flex-wrap: wrap;
+    justify-content: end;
+}
+
+.semester-list .semester-link {
+    color: #f1f1f1;
+    text-decoration: none;
+    font-size: 1.3em;
+}
+
+.semester-card {
+    background-color: rgb(36, 36, 36);
+    width: 5em;
+    padding: 1.3em;
+    text-align: center;
+    border-radius: 5px;
+}

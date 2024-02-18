@@ -7,10 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock title %}</title>
     <link rel="stylesheet" href="{% static '/styles/reset.css' %}">
+    <link rel="stylesheet" href="{% static '/styles/base.css' %}">
     {% block link %}{% endblock link %}
 </head>
 <body>
-    {% block content %}
-    {% endblock content %}
+    <div class="container" style="position: relative;">
+        {% block content %}
+        {% endblock content %}    
+    </div>
 </body>
 </html>

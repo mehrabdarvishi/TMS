@@ -1,0 +1,9 @@
+body {
+    background-color: antiquewhite;
+}
+
+.container {
+    max-width: 1280px;
+    margin-inline: 2em;
+    margin-block-start: 2em;
+}

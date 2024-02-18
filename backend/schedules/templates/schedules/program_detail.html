@@ -1,24 +1,37 @@
 {% extends 'base/base.html' %}
-
 {% block content %}
-<h3>کد دوره {{ program.code }}</h3>
-<h3>{{ program.title }}</h3>
-<h3>کد ترم {{ program.semester }}</h3>
+<h3 style="text-align: center; font-size: 1.5rem; margin-bottom: 1.2rem;">
+    <a href="{% url 'schedules:program-update' semester_code=program.semester program_code=program.code %}" style="font-size: .9rem; text-decoration: none; color: #0032d8;">
+        (ویرایش اطلاعات)
+    </a>
+     اطلاعات دوره
+</h3>
 
-<a href="{% url 'schedules:program-update' semester_code=program.semester program_code=program.code %}">ویرایش اطلاعات دوره</a>
-<a href="{% url 'schedules:course-create' semester_code=program.semester program_code=program.code %}">افزودن درس جدید</a>
+<div dir="rtl" style="display: flex; flex-direction: column; gap: .7em; font-size: 1.3rem; text-align: center; margin-bottom: 2rem;">
+    <p>کد دوره: {{ program.code }}</p>
+    <p>عنوان: {{ program.title }}</p>
+    <p>ترم: {{ program.semester }}</p>
+</div>
+
 
 {% if program.course_set.all %}
-    <h3>لیست درس‌های دوره در ترم {{ program.semester }}</h3>
-    <h4><a href="{% url 'schedules:program-schedule' semester_code=program.semester program_code=program.code %}">دریافت برنامه هفتگی دوره</a></h4>
-    {% for course in program.course_set.all %}
-        <h3>
-            <a href="{% url 'schedules:course-detail' semester_code=program.semester program_code=program.code course_id=course.id %}">
-                {{ course.title }}
+    <a href="{% url 'schedules:course-create' semester_code=program.semester program_code=program.code %}" style="position: absolute; top: 0; font-size: 1.1rem; text-decoration: none; color: #0032d8;">افزودن درس جدید</a>
+    <h3 style="text-align: right; font-size: 1.5rem; margin-bottom: 2rem;">:لیست درس‌های دوره</h3>
+    <div style="display: flex; flex-direction: row-reverse; gap: 2rem;">
+        {% for course in program.course_set.all %}
+            <a href="{% url 'schedules:course-detail' semester_code=program.semester program_code=program.code course_id=course.id %}" style="font-size: 1.5rem; text-decoration: none; color: #f1f1f1;">
+                <div style="background-color: #004b0c; width: 8em; text-align: center; padding: 1rem; display: flex; flex-direction: column; gap: .7rem; border-radius: 5px;">
+                    <p>
+                        {{ course.title }}
+                    </p>
+                    <p style="font-size: .9rem;">
+                        {{ course.instructor }}
+                    </p>
+                </div>
             </a>
-        </h3>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% else %}
-    <h3>درسی برای این ترم ثبت نشده است </h3>
+    <h3 style="font-size: 1.5em; text-align: center;" dir="rtl">درسی برای این ترم ثبت نشده است. <a href="{% url 'schedules:course-create' semester_code=program.semester program_code=program.code %}" style="text-decoration: none; color: #0032d8;">افزودن درس</a></h3>
 {% endif %}
 {% endblock content %}

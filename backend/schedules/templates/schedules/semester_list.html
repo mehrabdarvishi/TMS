@@ -1,13 +1,31 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
+
+{% block link %}
+    <link rel="stylesheet" href="{% static '/styles/semester_list.css' %}">
+{% endblock link %}
 
 {% block content %}
-<a href="{% url 'schedules:semester-create' %}">ایجاد ترم جدید</a>
-
-{% for semester in object_list %}
-    <div>
-        <a href="{% url 'schedules:semester-detail' semester.code %}">
-            {{ semester.code }}
-        </a>
-    </div>
-{% endfor %}
+    {% if object_list %}
+        <div class="new-semester">
+            <a href="{% url 'schedules:semester-create' %}" class="new-semester">ایجاد ترم جدید</a>
+        </div>
+        <div class="semester-list">
+            {% for semester in object_list %}
+                <a href="{% url 'schedules:semester-detail' semester.code %}" class="semester-link">
+                    <div class="semester-card">
+                        {{ semester.code }}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="font-size: 1.7em; text-align: center;">
+            ترمی ثبت نشده است.
+            <a href="{% url 'schedules:semester-create' %}" style="text-decoration: none; color: #0032d8;">
+                ایجاد ترم جدید
+            </a>
+        </div>
+    {% endif %}
 {% endblock content %}

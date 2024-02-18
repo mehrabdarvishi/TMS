@@ -1,33 +1,48 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <h3>عنوان درس: {{ course.title }}</h3>
-    <h3>دوره: {{ course.program }}</h3>
-    <h3>مدرس: {{ course.instructor }}</h3>
-    <h3>نمره مدرس: {% if course.instructor_evaluation_grade %}{{course.instructor_evaluation_grade}}{% else %}ثبت نشده{%endif%}</h3>
 
-    <a href="{% url 'schedules:course-update' semester_code=course.program.semester program_code=course.program course_id=course.id %}">
-        ویرایش اطلاعات درس
+
+
+
+<h3 style="text-align: center; font-size: 1.5rem; margin-bottom: 1.2rem;">
+    <a href="{% url 'schedules:course-update' semester_code=course.program.semester program_code=course.program course_id=course.id %}" style="font-size: .9rem; text-decoration: none; color: #0032d8;">
+        (ویرایش اطلاعات)
     </a>
-
-    <a href="{% url 'schedules:course-session-create' semester_code=course.program.semester program_code=course.program course_id=course.id %}">جلسه‌ی درسی جدید</a>
-
-
+     اطلاعات درس
+</h3>
     {% with sessions=course.coursesession_set.all %}
-        {% if sessions %}
-            <h3>جلسه {{ sessions|length }}</h3>
-            {% for session in sessions %}
-                <h4>مکان: {{ session.location }}</h4>
-                <h4>تاریخ شروع: {{ session.start_time }}</h4>
-                <h4>تاریخ پایان: {{ session.end_time }}</h4>
-                <h4>روز: {{ session.get_weekday_display }}</h4>
-                <a href="{% url 'schedules:course-session-update' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}">ویرایش</a>
-                <a href="{% url 'schedules:course-session-delete' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}">حذف</a>
+        <div dir="rtl" style="display: flex; flex-direction: column; gap: .7em; font-size: 1.3rem; text-align: center; margin-bottom: 2rem;">
+            <p>عنوان درس: {{ course.title }}</p>
+            <p>دوره: {{ course.program }}</p>
+            <p>مدرس: {{ course.instructor }}</p>
+            <p>نمره مدرس: {% if course.instructor_evaluation_grade %}{{course.instructor_evaluation_grade}}{% else %}ثبت نشده{%endif%}</p>
+            <p>تعداد جلسات هفتگی: {{ sessions|length }} جلسه</p>
+        </div>
 
-                <hr>
-            {% endfor %}
+        {% if sessions %}
+            <div style="display: flex; flex-direction: row-reverse; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <h3 style="font-size: 1.2rem;" dir="rtl">لیست جلسات هفتگی:</h3>
+                <a href="{% url 'schedules:course-session-create' semester_code=course.program.semester program_code=course.program course_id=course.id %}" style="text-decoration: none; color: #0032d8;">افزودن جلسه‌ی درسی جدید</a>           
+            </div>
+            <div style="display: flex; flex-direction: row-reverse; gap: 4rem;">
+                {% for session in sessions %}
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="background-color: #c7d4ff; display: flex; flex-direction: column; gap: 8px; padding: 1em; width: 12em; text-align: center; font-size: 1.2rem; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+                            <p>روز: {{ session.get_weekday_display }}</p>
+                            <p>ساعت شروع: {{ session.start_time }}</p>
+                            <p>ساعت پایان: {{ session.end_time }}</p>
+                            <p>مکان: {{ session.location }}</p>  
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                            <a href="{% url 'schedules:course-session-delete' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}" style="background-color: #ff1d1d; padding: 1rem; text-decoration: none; color: #f1f1f1; text-align: center; font-weight: bold;">حذف</a>        
+                            <a href="{% url 'schedules:course-session-update' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}" style="background-color: #ffee55; padding: 1rem; text-decoration: none; color: rgb(36, 36, 36); text-align: center; font-weight: bold;">ویرایش</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
-            <h3>.برای این درس، جلسه‌ای ثبت نشده است</h3>
+            <h3 style="font-size: 1.5em; text-align: center;" dir="rtl">برای این درس، جلسه‌ای ثبت نشده است. <a href="{% url 'schedules:course-session-create' semester_code=course.program.semester program_code=course.program course_id=course.id %}" style="text-decoration: none; color: #0032d8;">افزودن جلسه‌ی درسی جدید</a></h3>
         {% endif %}
     {% endwith %}
 {% endblock content %}
