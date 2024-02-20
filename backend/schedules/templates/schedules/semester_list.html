@@ -11,6 +11,9 @@
         <div class="new-semester">
             <a href="{% url 'schedules:semester-create' %}" class="new-semester">ایجاد ترم جدید</a>
         </div>
+        <div style="text-align: right; margin-bottom: 2rem; font-size: 1.4rem;">
+            <h2>.ترم مورد نظر را انتخاب کنید</h2>
+        </div>
         <div class="semester-list">
             {% for semester in object_list %}
                 <a href="{% url 'schedules:semester-detail' semester.code %}" class="semester-link">

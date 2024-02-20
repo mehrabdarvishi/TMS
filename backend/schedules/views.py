@@ -8,13 +8,13 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 import pandas as pd
-from io import BytesIO
 from .models import Instructor, Semester, Program, Course, CourseSession, ProgramTitle, CourseTitle
+from .forms import CourseForm, SemesterForm
 from .utils import overlapping_sessions_wrapped
 
 class SemesterCreateView(CreateView):
     model = Semester
-    fields = ['code', 'day_start', 'month_start', 'year_start', 'day_end', 'month_end', 'year_end']
+    form_class = SemesterForm
     success_url = reverse_lazy('schedules:semester-list')
 
 class SemesterListView(ListView):
@@ -93,7 +93,7 @@ class ProgramDeleteView(DeleteView):
     
 class CourseCreateView(CreateView):
     model = Course
-    fields = ['title', 'instructor', 'instructor_evaluation_grade']
+    form_class = CourseForm
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -114,7 +114,7 @@ class CourseDetailView(DetailView):
     
 class CourseUpdateView(UpdateView):
     model = Course
-    fields = ['title', 'instructor', 'instructor_evaluation_grade']
+    form_class = CourseForm
     template_name_suffix = '_update_form'
 
     def get_object(self) -> Model:
@@ -139,7 +139,7 @@ class CourseDeleteView(DeleteView):
 
 class CourseSessionCreateView(CreateView):
     model = CourseSession
-    fields = ['location', 'start_time', 'end_time', 'weekday', 'group']
+    fields = ['location', 'start_time', 'end_time', 'weekday']
     template_name = 'schedules/course_session_form.html'
     
 
@@ -155,7 +155,7 @@ class CourseSessionCreateView(CreateView):
 
 class CourseSessionUpdateView(UpdateView):
     model = CourseSession
-    fields = ['location', 'start_time', 'end_time', 'weekday', 'group']
+    fields = ['location', 'start_time', 'end_time', 'weekday']
     template_name = 'schedules/course_session_update_form.html'
 
     def get_object(self) -> Model:
@@ -248,14 +248,14 @@ class ExportDataTemplateView(TemplateView):
     template_name = 'schedules/export_data.html'
 
 def export_data_to_excel(request):
-    course_sessions = CourseSession.objects.values('course__program__semester__code', 'course__program__code', 'course__title__title', 'group', 'weekday', 'start_time', 'end_time', 'location', 'course__instructor__first_name', 'course__instructor__last_name', 'course__instructor_evaluation_grade')
+    course_sessions = CourseSession.objects.values('course__program__semester__code', 'course__program__code', 'course__title__title', 'course__group', 'weekday', 'start_time', 'end_time', 'location', 'course__instructor__first_name', 'course__instructor__last_name', 'course__instructor_evaluation_grade')
 
     df = pd.DataFrame.from_records(course_sessions)
     df.rename(columns={
         'course__program__semester__code': 'کد ترم',
         'course__program__code': 'کد دوره',
         'course__title__title': 'نام درس',
-        'group': 'شماره گروه',
+        'course__group': 'شماره گروه',
         'weekday': 'روز',
         'start_time': 'ساعت شروع',
         'end_time': 'ساعت پایان',

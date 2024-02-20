@@ -13,7 +13,7 @@
 </h3>
     {% with sessions=course.coursesession_set.all %}
         <div dir="rtl" style="display: flex; flex-direction: column; gap: .7em; font-size: 1.3rem; text-align: center; margin-bottom: 2rem;">
-            <p>عنوان درس: {{ course.title }}</p>
+            <p>عنوان درس: {{ course.title }} {% if course.group %}(<span style="color: #ff1d1d;">گروه {{ course.group }}</span>){% endif %}</p>
             <p>دوره: {{ course.program }}</p>
             <p>مدرس: {{ course.instructor }}</p>
             <p>نمره مدرس: {% if course.instructor_evaluation_grade %}{{course.instructor_evaluation_grade}}{% else %}ثبت نشده{%endif%}</p>
@@ -30,9 +30,9 @@
                     <div style="display: flex; flex-direction: column;">
                         <div style="background-color: #c7d4ff; display: flex; flex-direction: column; gap: 8px; padding: 1em; width: 12em; text-align: center; font-size: 1.2rem; border-top-left-radius: 5px; border-top-right-radius: 5px;">
                             <p>روز: {{ session.get_weekday_display }}</p>
-                            <p>ساعت شروع: {{ session.start_time }}</p>
-                            <p>ساعت پایان: {{ session.end_time }}</p>
-                            <p>مکان: {{ session.location }}</p>  
+                            <p>ساعت شروع: {{ session.start_time|date:'H:i' }}</p>
+                            <p>ساعت پایان: {{ session.end_time|date:'H:i' }}</p>
+                            <p>مکان: {{ session.location }}</p>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr;">
                             <a href="{% url 'schedules:course-session-delete' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}" style="background-color: #ff1d1d; padding: 1rem; text-decoration: none; color: #f1f1f1; text-align: center; font-weight: bold;">حذف</a>        

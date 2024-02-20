@@ -1,9 +1,50 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static 'styles/form.css' %}">
+{% endblock link %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save">
-</form>
+
+<h2 style="font-size: 1.5rem; margin-bottom: 4rem; text-align: center;">پس از وارد کردن اطلاعات ترم، "ذخیره" را انتخاب کنید</h2>
+
+<div class="form" dir="rtl">
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label for="id_code">{{ form.code.label }}:</label>
+            {{ form.code }}
+        </p>
+        <div style="display: flex; align-items: center; gap: 2rem;">
+            <p>
+                <label for="id_day_start">{{ form.day_start.label }}:</label>
+                {{ form.day_start }}    
+            </p>
+            <p>
+                <label for="id_month_start">{{ form.month_start.label }}:</label>
+                {{ form.month_start }}    
+            </p>
+            <p>
+                <label for="id_year_start">{{ form.year_start.label }}:</label>
+                {{ form.year_start }}    
+            </p>    
+        </div>
+        <div style="display: flex; align-items: center; gap: 2rem;">
+            <p>
+                <label for="id_day_end">{{ form.day_end.label }}:</label>
+                {{ form.day_end }}    
+            </p>
+            <p>
+                <label for="id_month_end">{{ form.month_end.label }}:</label>
+                {{ form.month_end }}    
+            </p>
+            <p>
+                <label for="id_year_end">{{ form.year_end.label }}:</label>
+                {{ form.year_end }}    
+            </p>
+        </div>
+        <input type="submit" value="ذخیره">
+    </form>    
+</div>
 {% endblock content %}

@@ -1,0 +1,48 @@
+.update-form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+}
+
+.update-form select {
+    cursor: pointer;
+    font-size: 1.3rem;
+    padding-inline: 1rem;
+    padding-block: .5rem;
+    min-width: 15rem;
+    text-align: center;
+    outline: none;
+}
+
+.update-form label {
+    font-size: 1.5rem;
+    direction: rtl;
+    margin-left: 1rem;
+}
+
+.update-form input[type=text] {
+    font-size: 1.5rem;
+    text-align: center;
+    outline: none;
+}
+
+.update-form input[type=number] {
+    font-size: 1.5rem;
+    text-align: center;
+    outline: none;
+}
+
+.update-form input[type=submit] {
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding-inline: 2rem;
+    padding-block: .5rem;
+    background-color: #ffff00;
+    border: none;
+    border-radius: 5px;
+}
+
+.update-form input[type=submit]:hover {
+    background-color: #c9c900;
+}

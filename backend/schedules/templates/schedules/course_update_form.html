@@ -1,11 +1,23 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
+
+{% block link %}
+    <link rel="stylesheet" href="{% static 'styles/update_form.css' %}">
+{% endblock link %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="اعمال">
-</form>
-
-<a href="{% url 'schedules:course-delete' semester_code=course.program.semester program_code=course.program course_id=course.id %}">حذف</a>
+    <h2 style="font-size: 1.5rem; margin-bottom: 4rem; text-align: center;">پس از اعمال تغییرات، "به‌روز رسانی" را انتخاب کنید</h2>
+    <div class="update-form" dir="rtl">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="به‌روز رسانی">
+        </form>
+        <a href="{% url 'schedules:course-delete' semester_code=course.program.semester program_code=course.program course_id=course.id %}" style="text-decoration: none; color: #f1f1f1; position: absolute; top: 0; left: 0; display: inline-block;">
+            <div style="background-color: #ff0000; padding-inline: 2rem; padding-block: .5rem; border-radius: 5px;">
+                حذف درس
+            </div>
+        </a>
+    </div>
 {% endblock content %}

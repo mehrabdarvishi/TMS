@@ -1,9 +1,18 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static 'styles/form.css' %}">
+{% endblock link %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Save">
-</form>
+<div class="form" dir="rtl">
+    <h2 style="font-size: 1.5rem; margin-bottom: 4rem; text-align: center;">پس از وارد کردن اطلاعات دوره، "ذخیره" را انتخاب کنید.</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="ذخیره">
+    </form>    
+</div>
 {% endblock content %}
