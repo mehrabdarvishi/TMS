@@ -1,10 +1,25 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static '/styles/form.css' %}">
+{% endblock link %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    <p>آیا از حذف جلسه هفتگی  {{ object.course }} ({% if object.course.group %}گروه {{ object.course.group }}{% endif %}) اطمینان دارید؟</p>
-    {{ form }}
-    <input type="submit" value="Confirm">
-</form>
+
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; margin-bottom: 3rem; font-size: 1.5rem;">
+        <p>آیا از حذف جلسه هفتگی  {{ object.course }} {% if object.course.group %}(گروه {{ object.course.group }}){% endif %} اطمینان دارید؟</p>
+    </div>
+    <div class="delete-form">
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <div style="display: flex; gap: 2rem; justify-content: center; align-items: center;">
+                <input type="submit" value="تایید">
+                <a href="{% url 'schedules:course-detail' semester_code=object.course.program.semester program_code=object.course.program.code course_id=object.course.id %}" class="cancel-btn">
+                        انصراف
+                </a>    
+            </div>
+        </form>    
+    </div>
 {% endblock content %}

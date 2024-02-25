@@ -1,10 +1,26 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static '/styles/form.css' %}">
+{% endblock link %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
-    {{ form }}
-    <input type="submit" value="Confirm">
-</form>
+
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; margin-bottom: 3rem; font-size: 1.5rem;">
+        <p>آیا از حذف ترم "{{ object.code }}" اطمینان دارید؟</p>
+        <p style="color: #ff0000;">توجه: با حذف یک ترم، اطلاعات دوره‌ها و درس‌های آن ترم نیز حذف خواهند شد.</p>
+    </div>
+    <div class="delete-form">
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <div style="display: flex; gap: 2rem; justify-content: center; align-items: center;">
+                <input type="submit" value="تایید">
+                <a href="{% url 'schedules:semester-detail' semester_code=object.code %}" class="cancel-btn">
+                        انصراف
+                </a>    
+            </div>
+        </form>    
+    </div>
 {% endblock content %}

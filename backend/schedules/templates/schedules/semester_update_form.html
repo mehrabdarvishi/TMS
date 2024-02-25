@@ -1,11 +1,58 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static 'styles/update_form.css' %}">
+{% endblock link %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="اعمال">
-</form>
 
-<a href="{% url 'schedules:semester-delete' object.code %}">حذف</a>
+<h2 style="font-size: 1.5rem; margin-bottom: 4rem; text-align: center;">پس از اعمال تغییرات، "به‌روز رسانی" را انتخاب کنید.</h2>
+
+<div class="update-form">
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label for="id_code">{{ form.code.label }}:</label>
+            {{ form.code }}
+        </p>
+        <div style="display: flex; align-items: center; gap: 2rem;">
+            <p>
+                <label for="id_day_start">{{ form.day_start.label }}:</label>
+                {{ form.day_start }}    
+            </p>
+            <p>
+                <label for="id_month_start">{{ form.month_start.label }}:</label>
+                {{ form.month_start }}    
+            </p>
+            <p>
+                <label for="id_year_start">{{ form.year_start.label }}:</label>
+                {{ form.year_start }}    
+            </p>    
+        </div>
+        <div style="display: flex; align-items: center; gap: 2rem;">
+            <p>
+                <label for="id_day_end">{{ form.day_end.label }}:</label>
+                {{ form.day_end }}    
+            </p>
+            <p>
+                <label for="id_month_end">{{ form.month_end.label }}:</label>
+                {{ form.month_end }}    
+            </p>
+            <p>
+                <label for="id_year_end">{{ form.year_end.label }}:</label>
+                {{ form.year_end }}    
+            </p>
+        </div>
+        <input type="submit" value="به‌روز رسانی">
+    </form>    
+</div>
+
+<a href="{% url 'schedules:semester-delete' object.code %}" style="text-decoration: none; color: #f1f1f1; position: absolute; top: 0; left: 0; display: inline-block;">
+    <div style="background-color: #ff0000; padding-inline: 2rem; padding-block: .5rem; border-radius: 5px;">
+        حذف ترم
+    </div>
+</a>
+
+
 {% endblock content %}

@@ -3,10 +3,10 @@
 
 {% block content %}
 <h3 style="text-align: center; font-size: 1.5rem; margin-bottom: 1.2rem;">
-    <a href="{% url 'schedules:semester-update' object.code %}" style="font-size: .9rem; text-decoration: none; color: #0032d8;">
+     اطلاعات ترم
+     <a href="{% url 'schedules:semester-update' object.code %}" style="font-size: .9rem; text-decoration: none; color: #0032d8;">
         (ویرایش اطلاعات)
     </a>
-     اطلاعات ترم
 </h3>
 
 <div dir="rtl" style="display: flex; flex-direction: column; gap: .7em; font-size: 1.3rem; text-align: center; margin-bottom: 2rem;">
@@ -17,9 +17,9 @@
 
 
 {% if object.program_set.all %}
-    <a href="{% url 'schedules:program-create' object.code %}" style="position: absolute; top: 0; font-size: 1.1rem; text-decoration: none; color: #0032d8;">افزودن دوره جدید</a>
+    <a href="{% url 'schedules:program-create' object.code %}" style="position: absolute; top: 0; left: 0; font-size: 1.1rem; text-decoration: none; color: #0032d8;">افزودن دوره جدید</a>
     <h3 style="text-align: right; font-size: 1.5rem; margin-bottom: 2rem;">دوره‌های برگزار شده</h3>
-    <div style="display: flex; flex-direction: row-reverse; gap: 2rem;">
+    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
         {% for program in object.program_set.all %}
             <a href="{% url 'schedules:program-detail' semester_code=object.code program_code=program.code %}" style="font-size: 1.5rem; text-decoration: none; color: #f1f1f1;">
                 <div style="background-color: #003c4b; width: 8em; text-align: center; padding: 1rem; display: flex; flex-direction: column; gap: .7rem; border-radius: 5px;">

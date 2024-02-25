@@ -6,10 +6,10 @@
 
 
 <h3 style="text-align: center; font-size: 1.5rem; margin-bottom: 1.2rem;">
-    <a href="{% url 'schedules:course-update' semester_code=course.program.semester program_code=course.program course_id=course.id %}" style="font-size: .9rem; text-decoration: none; color: #0032d8;">
+     اطلاعات درس
+     <a href="{% url 'schedules:course-update' semester_code=course.program.semester program_code=course.program course_id=course.id %}" style="font-size: .9rem; text-decoration: none; color: #0032d8;">
         (ویرایش اطلاعات)
     </a>
-     اطلاعات درس
 </h3>
     {% with sessions=course.coursesession_set.all %}
         <div dir="rtl" style="display: flex; flex-direction: column; gap: .7em; font-size: 1.3rem; text-align: center; margin-bottom: 2rem;">
@@ -21,11 +21,13 @@
         </div>
 
         {% if sessions %}
-            <div style="display: flex; flex-direction: row-reverse; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <h3 style="font-size: 1.2rem;" dir="rtl">لیست جلسات هفتگی:</h3>
-                <a href="{% url 'schedules:course-session-create' semester_code=course.program.semester program_code=course.program course_id=course.id %}" style="text-decoration: none; color: #0032d8;">افزودن جلسه‌ی درسی جدید</a>           
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <h3 style="font-size: 1.2rem;">لیست جلسات هفتگی:</h3>
+                <a href="{% url 'schedules:course-session-create' semester_code=course.program.semester program_code=course.program course_id=course.id %}" style="text-decoration: none; color: #0032d8;">
+                    افزودن جلسه‌ی درسی جدید
+                </a>           
             </div>
-            <div style="display: flex; flex-direction: row-reverse; gap: 4rem;">
+            <div style="display: flex; gap: 4rem;">
                 {% for session in sessions %}
                     <div style="display: flex; flex-direction: column;">
                         <div style="background-color: #c7d4ff; display: flex; flex-direction: column; gap: 8px; padding: 1em; width: 12em; text-align: center; font-size: 1.2rem; border-top-left-radius: 5px; border-top-right-radius: 5px;">
@@ -35,8 +37,12 @@
                             <p>مکان: {{ session.location }}</p>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                            <a href="{% url 'schedules:course-session-delete' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}" style="background-color: #ff1d1d; padding: 1rem; text-decoration: none; color: #f1f1f1; text-align: center; font-weight: bold;">حذف</a>        
-                            <a href="{% url 'schedules:course-session-update' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}" style="background-color: #ffee55; padding: 1rem; text-decoration: none; color: rgb(36, 36, 36); text-align: center; font-weight: bold;">ویرایش</a>
+                            <a href="{% url 'schedules:course-session-delete' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}" style="background-color: #ff1d1d; padding: 1rem; text-decoration: none; color: #f1f1f1; text-align: center; font-weight: bold;">
+                                حذف
+                            </a>        
+                            <a href="{% url 'schedules:course-session-update' semester_code=course.program.semester program_code=course.program course_id=course.id session_id=session.id %}" style="background-color: #ffee55; padding: 1rem; text-decoration: none; color: rgb(36, 36, 36); text-align: center; font-weight: bold;">
+                                ویرایش
+                            </a>
                         </div>
                     </div>
                 {% endfor %}

@@ -12,7 +12,6 @@
     display: flex;
     gap: 2em;
     flex-wrap: wrap;
-    justify-content: end;
 }
 
 .semester-list .semester-link {

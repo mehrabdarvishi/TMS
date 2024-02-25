@@ -9,13 +9,13 @@ class Instructor(models.Model):
         return f'{self.first_name} {self.last_name}'
 
 class ProgramTitle(models.Model):
-    title = models.CharField(verbose_name='عنوان', max_length=80)
+    title = models.CharField(verbose_name='عنوان', unique=True, max_length=80)
 
     def __str__(self) -> str:
         return self.title
 
 class CourseTitle(models.Model):
-    title = models.CharField(verbose_name='عنوان', max_length=80)
+    title = models.CharField(verbose_name='عنوان', unique=True, max_length=80)
 
     def __str__(self) -> str:
         return self.title

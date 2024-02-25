@@ -7,15 +7,20 @@
     </div>
 </a>
 
-<div style="display: flex; flex-direction: column; gap: 4rem; align-items: center;">
-    {% for program_title in object_list %}
-    <div style="display: flex; flex-direction: row-reverse; align-items: center; gap: 3rem;">
-        <p style="font-size: 1.5rem;">{{ program_title.title }}</p>
-        <div style="display: flex; gap: 1rem; font-size: 1.1rem; text-decoration: none;">
-            <a href="{% url 'schedules:program-title-delete' program_title.id %}" style="text-decoration: none;">حذف</a>
-            <a href="{% url 'schedules:program-title-update' program_title.id %}" style="text-decoration: none;">ویرایش</a>
+    {% if object_list %}
+        <div style="display: flex; flex-direction: column; gap: 4rem; align-items: center;">
+            {% for program_title in object_list %}
+            <div style="display: flex; flex-direction: row-reverse; align-items: center; gap: 3rem;">
+                <p style="font-size: 1.5rem;">{{ program_title.title }}</p>
+                <div style="display: flex; gap: 1rem; font-size: 1.1rem; text-decoration: none;">
+                    <a href="{% url 'schedules:program-title-delete' program_title.id %}" style="text-decoration: none;">حذف</a>
+                    <a href="{% url 'schedules:program-title-update' program_title.id %}" style="text-decoration: none;">ویرایش</a>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-    </div>
-    {% endfor %}
-</div>
+    {% else %}
+        <p dir="rtl" style="text-align: center; font-size: 1.5rem;">عنوانی ثبت نشده است.</p>
+    {% endif %}
+
 {% endblock content %}

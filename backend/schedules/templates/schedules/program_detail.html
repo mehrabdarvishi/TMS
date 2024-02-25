@@ -1,10 +1,10 @@
 {% extends 'base/base.html' %}
 {% block content %}
 <h3 style="text-align: center; font-size: 1.5rem; margin-bottom: 1.2rem;">
-    <a href="{% url 'schedules:program-update' semester_code=program.semester program_code=program.code %}" style="font-size: .9rem; text-decoration: none; color: #0032d8;">
+     اطلاعات دوره
+     <a href="{% url 'schedules:program-update' semester_code=program.semester program_code=program.code %}" style="font-size: .9rem; text-decoration: none; color: #0032d8;">
         (ویرایش اطلاعات)
     </a>
-     اطلاعات دوره
 </h3>
 
 <div dir="rtl" style="display: flex; flex-direction: column; gap: .7em; font-size: 1.3rem; text-align: center; margin-bottom: 2rem;">
@@ -15,9 +15,9 @@
 
 
 {% if program.course_set.all %}
-    <a href="{% url 'schedules:course-create' semester_code=program.semester program_code=program.code %}" style="position: absolute; top: 0; font-size: 1.1rem; text-decoration: none; color: #0032d8;">افزودن درس جدید</a>
-    <h3 style="text-align: right; font-size: 1.5rem; margin-bottom: 2rem;">:لیست درس‌های دوره</h3>
-    <div style="display: flex; flex-direction: row-reverse; gap: 2rem;">
+    <a href="{% url 'schedules:course-create' semester_code=program.semester program_code=program.code %}" style="position: absolute; top: 0; left: 0; font-size: 1.1rem; text-decoration: none; color: #0032d8;">افزودن درس جدید</a>
+    <h3 style="text-align: right; font-size: 1.5rem; margin-bottom: 2rem;">لیست درس‌های دوره:</h3>
+    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
         {% for course in program.course_set.all %}
             <a href="{% url 'schedules:course-detail' semester_code=program.semester program_code=program.code course_id=course.id %}" style="font-size: 1.5rem; text-decoration: none; color: #f1f1f1;">
                 <div style="background-color: #004b0c; width: 8em; text-align: center; padding: 1rem; display: flex; flex-direction: column; gap: .7rem; border-radius: 5px;">

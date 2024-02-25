@@ -7,15 +7,24 @@ from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+from django.contrib.messages.views import SuccessMessageMixin
 import pandas as pd
 from .models import Instructor, Semester, Program, Course, CourseSession, ProgramTitle, CourseTitle
 from .forms import CourseForm, SemesterForm
 from .utils import overlapping_sessions_wrapped
 
-class SemesterCreateView(CreateView):
+class SemesterCreateView(SuccessMessageMixin, CreateView):
     model = Semester
     form_class = SemesterForm
     success_url = reverse_lazy('schedules:semester-list')
+    success_message = 'ترم %(semester_code)s با موفقیت ایجاد شد.'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            semester_code = self.object.code,
+        )
+
 
 class SemesterListView(ListView):
     model = Semester
@@ -41,16 +50,29 @@ class SemesterDeleteView(DeleteView):
     slug_field = 'code'
     success_url = reverse_lazy('schedules:semester-list')
 
-class ProgramCreateView(CreateView):
+class ProgramCreateView(SuccessMessageMixin, CreateView):
     model = Program
     fields = ['code', 'title']
-    
+    success_message = 'دوره %(program_code)s با موفقیت افزوده شد.'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title_list_is_empty'] = not ProgramTitle.objects.filter().exists()
+        return context
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         semester_code = self.kwargs.get('semester_code')
         form.instance.semester = Semester.objects.get(code=semester_code)
         return form
     
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            program_code = self.object.code,
+        )
+
+
     def get_success_url(self) -> str:
         semester_code = self.kwargs.get('semester_code')
         return reverse_lazy('schedules:semester-detail', kwargs={'semester_code': semester_code})
@@ -91,9 +113,18 @@ class ProgramDeleteView(DeleteView):
         semester_code = self.kwargs.get('semester_code')
         return reverse_lazy('schedules:semester-detail', kwargs={'semester_code':semester_code})
     
-class CourseCreateView(CreateView):
+class CourseCreateView(SuccessMessageMixin, CreateView):
     model = Course
     form_class = CourseForm
+    success_message = 'درس %(course_name)s با موفقیت به دوره %(program_title)s افزوده شد'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            course_name = self.object.title.title,
+            program_title = self.object.program.title.title,
+        )
+
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -201,7 +232,11 @@ class ProgramTitleCreateView(CreateView):
     model = ProgramTitle
     template_name='schedules/program_title_form.html'
     fields = ['title']
-    success_url = reverse_lazy('schedules:program-title-list')
+
+    def get_success_url(self) -> str:
+        if next := self.request.GET.get('next'):
+            return next
+        return reverse_lazy('schedules:program-title-list')
 
 class ProgramTitleListView(ListView):
     model = ProgramTitle

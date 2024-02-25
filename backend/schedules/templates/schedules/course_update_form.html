@@ -7,8 +7,10 @@
 {% endblock link %}
 
 {% block content %}
-    <h2 style="font-size: 1.5rem; margin-bottom: 4rem; text-align: center;">پس از اعمال تغییرات، "به‌روز رسانی" را انتخاب کنید</h2>
-    <div class="update-form" dir="rtl">
+    <h2 style="font-size: 1.5rem; margin-bottom: 4rem; text-align: center;">
+        پس از اعمال تغییرات، "به‌روز رسانی" را انتخاب کنید
+    </h2>
+    <div class="update-form">
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}

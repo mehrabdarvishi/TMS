@@ -11,7 +11,16 @@
     {% block link %}{% endblock link %}
 </head>
 <body>
-    <div class="container" style="position: relative;">
+    {% if messages %}
+        <ul class="messages" dir="rtl" style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; font-size: 1.2rem; background-color: #004500; color: #f1f1f1; margin-bottom: 1rem; padding-inline: 1rem; padding-block: 10px;">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div dir="rtl" class="container" style="position: relative; margin-bottom: 1rem;">
         {% block content %}
         {% endblock content %}    
     </div>

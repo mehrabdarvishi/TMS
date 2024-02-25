@@ -6,12 +6,25 @@
 {% endblock link %}
 
 {% block content %}
-<div class="form" dir="rtl">
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+<div class="form">
     <h2 style="font-size: 1.5rem; margin-bottom: 4rem; text-align: center;">پس از وارد کردن اطلاعات دوره، "ذخیره" را انتخاب کنید.</h2>
 
     <form method="post">
         {% csrf_token %}
         {{ form }}
+        {% if title_list_is_empty %}
+            <p style="font-size: 1.2rem; color: #ff0000;">
+                عنوانی برای هیچ دوره‌ای تعریف نشده است. برای افزودن عناوین، به <a href="{% url 'schedules:program-title-create' %}?next={{ request.path|urlencode }}">این لینک</a> مراجعه کنید.
+            </p>
+        {% endif %}
         <input type="submit" value="ذخیره">
     </form>    
 </div>
