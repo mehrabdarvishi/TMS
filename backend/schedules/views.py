@@ -34,21 +34,38 @@ class SemesterDetailView(DetailView):
     slug_url_kwarg = 'semester_code'
     slug_field = 'code'
 
-class SemesterUpdateView(UpdateView):
+class SemesterUpdateView(SuccessMessageMixin, UpdateView):
     model = Semester
     fields = '__all__'
     template_name_suffix = '_update_form'
     slug_url_kwarg = 'semester_code'
     slug_field = 'code'
+    success_message = 'اطلاعات ترم %(semester_code)s با موفقیت به‌روزرسانی شد.'
 
     def get_success_url(self) -> str:
         return reverse('schedules:semester-detail', kwargs={'semester_code':self.object.code})
 
-class SemesterDeleteView(DeleteView):
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            semester_code = self.object.code,
+        )
+
+
+class SemesterDeleteView(SuccessMessageMixin, DeleteView):
     model = Semester
     slug_url_kwarg = 'semester_code'
     slug_field = 'code'
     success_url = reverse_lazy('schedules:semester-list')
+    success_message = 'ترم %(semester_code)s با موفقیت حذف شد.'
+    
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            semester_code = self.object.code,
+        )
+
+
 
 class ProgramCreateView(SuccessMessageMixin, CreateView):
     model = Program
@@ -86,10 +103,11 @@ class ProgramDetailView(DetailView):
         return Program.objects.get(code=program_code, semester=semester)
         
 
-class ProgramUpdateView(UpdateView):
+class ProgramUpdateView(SuccessMessageMixin, UpdateView):
     model = Program
     fields = ['code', 'title']
     template_name_suffix = '_update_form'
+    success_message = 'اطلاعات دوره %(program_code)s با موفقیت به‌روزرسانی شد.'
 
     def get_object(self) -> Model:
         program_code, semester_code = self.kwargs.get('program_code'), self.kwargs.get('semester_code')
@@ -101,8 +119,17 @@ class ProgramUpdateView(UpdateView):
         program_code = self.object.code
         return reverse_lazy('schedules:program-detail', kwargs={'semester_code':semester_code, 'program_code':program_code})
 
-class ProgramDeleteView(DeleteView):
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            program_code = self.object.code,
+        )
+
+
+class ProgramDeleteView(SuccessMessageMixin, DeleteView):
     model = Program
+    success_message = 'دوره %(program_code)s با موفقیت حذف شد.'
+
 
     def get_object(self) -> Model:
         semester_code, program_code = self.kwargs.get('semester_code'), self.kwargs.get('program_code')
@@ -112,17 +139,24 @@ class ProgramDeleteView(DeleteView):
     def get_success_url(self) -> str:
         semester_code = self.kwargs.get('semester_code')
         return reverse_lazy('schedules:semester-detail', kwargs={'semester_code':semester_code})
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            program_code = self.object.code,
+        )
     
 class CourseCreateView(SuccessMessageMixin, CreateView):
     model = Course
     form_class = CourseForm
-    success_message = 'درس %(course_name)s با موفقیت به دوره %(program_title)s افزوده شد'
+    success_message = 'درس %(course_name)s با موفقیت به دوره %(program_title)s در ترم %(semester_code)s افزوده شد'
 
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(
             cleaned_data,
             course_name = self.object.title.title,
             program_title = self.object.program.title.title,
+            semester_code = self.object.program.semester.code,
         )
 
 
@@ -143,10 +177,19 @@ class CourseDetailView(DetailView):
     pk_url_kwarg = 'course_id'
 
     
-class CourseUpdateView(UpdateView):
+class CourseUpdateView(SuccessMessageMixin, UpdateView):
     model = Course
     form_class = CourseForm
     template_name_suffix = '_update_form'
+    success_message = 'اطلاعات درس %(course_name)s دوره %(program_title)s در ترم %(semester_code)s با موفقیت به‌روزرسانی شد.'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            course_name = self.object.title.title,
+            program_title = self.object.program.title.title,
+            semester_code = self.object.program.semester.code,
+        )
 
     def get_object(self) -> Model:
         return Course.objects.get(id=self.kwargs.get('course_id'))
@@ -155,8 +198,18 @@ class CourseUpdateView(UpdateView):
         semester_code, program_code, course_id = self.kwargs.get('semester_code'), self.kwargs.get('program_code'), self.kwargs.get('course_id')
         return reverse_lazy('schedules:course-detail', kwargs={'semester_code':semester_code, 'program_code':program_code, 'course_id':course_id})
 
-class CourseDeleteView(DeleteView):
+class CourseDeleteView(SuccessMessageMixin, DeleteView):
     model = Course
+    success_message = 'درس %(course_name)s دوره %(program_title)s در ترم %(semester_code)s با موفقیت حذف شد.'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            course_name = self.object.title.title,
+            program_title = self.object.program.title.title,
+            semester_code = self.object.program.semester.code,
+        )
+
 
     def get_object(self) -> Model:
         return Course.objects.get(id=self.kwargs.get('course_id'))
@@ -228,6 +281,10 @@ class InstructorCreateView(CreateView):
     fields = ['first_name', 'last_name']
     success_url = reverse_lazy('schedules:instructor-create')
 
+class InstructorListView(ListView):
+    model = Instructor
+
+
 class ProgramTitleCreateView(CreateView):
     model = ProgramTitle
     template_name='schedules/program_title_form.html'
@@ -254,11 +311,23 @@ class ProgramTitleDeleteView(DeleteView):
     template_name = 'schedules/program_title_confirm_delete.html'
 
 
-class CourseTitleCreateView(CreateView):
+class CourseTitleCreateView(SuccessMessageMixin, CreateView):
     model = CourseTitle
     template_name = 'schedules/course_title_form.html'
     fields = ['title']
-    success_url = reverse_lazy('schedules:course-title-create')
+    success_url = reverse_lazy('schedules:course-title-list')
+    success_message = 'عنوان درس "%(course_title)s" با موفقیت ثبت شد.'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            course_title = self.object.title,
+        )
+
+class CourseTitleListView(ListView):
+    model = CourseTitle
+    template_name = 'schedules/course_title_list.html'
+    ordering = ['-id']
 
 
 class ProgramSchedule(View):

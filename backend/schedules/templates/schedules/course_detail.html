@@ -16,7 +16,7 @@
             <p>عنوان درس: {{ course.title }} {% if course.group %}(<span style="color: #ff1d1d;">گروه {{ course.group }}</span>){% endif %}</p>
             <p>دوره: {{ course.program }}</p>
             <p>مدرس: {{ course.instructor }}</p>
-            <p>نمره مدرس: {% if course.instructor_evaluation_grade %}{{course.instructor_evaluation_grade}}{% else %}ثبت نشده{%endif%}</p>
+            <p>نمره ارزیابی مدرس: {% if course.instructor_evaluation_grade %}{{course.instructor_evaluation_grade}}{% else %}ثبت نشده{%endif%}</p>
             <p>تعداد جلسات هفتگی: {{ sessions|length }} جلسه</p>
         </div>
 

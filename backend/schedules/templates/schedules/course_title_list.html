@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+
+{% block link %}
+    <link rel="stylesheet" href="{% static '/styles/semester_list.css' %}">
+{% endblock link %}
+
+{% block content %}
+    {% if object_list %}
+        <div class="new-semester" style="text-align: left;">
+            <a href="{% url 'schedules:course-title-create' %}" class="new-semester">عنوان درس جدید</a>
+        </div>
+        <div style="text-align: right; margin-bottom: 2rem; font-size: 1.5rem;">
+            <h2>عناوین دروس:</h2>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            {% for course_title in object_list %}
+                <p style="font-size: 1.2rem;">
+                    {{ course_title.title }}
+                </p>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="font-size: 1.7em; text-align: center;">
+            عنوان درسی ثبت نشده است.
+            <a href="{% url 'schedules:course-title-create' %}" style="text-decoration: none; color: #0032d8;">
+                عنوان درس جدید
+            </a>
+        </div>
+    {% endif %}
+{% endblock content %}

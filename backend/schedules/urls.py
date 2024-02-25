@@ -38,7 +38,9 @@ urlpatterns = [
 
 
     path('instructor/new/', views.InstructorCreateView.as_view(), name='instructor-create'),
+    path('instructor/', views.InstructorListView.as_view(), name='instructor-list'),
     path('course-title/new/', views.CourseTitleCreateView.as_view(), name='course-title-create'),
+    path('course-title/', views.CourseTitleListView.as_view(), name='course-title-list'),
     path('program-title/', views.ProgramTitleListView.as_view(), name='program-title-list'),
     path('program-title/<int:pk>/update/', views.ProgramTitleUpdateView.as_view(), name='program-title-update'),
     path('program-title/<int:pk>/delete/', views.ProgramTitleDeleteView.as_view(), name='program-title-delete'),
