@@ -1,0 +1,13 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    {% if agg %}
+        {{ agg|safe }}
+    {% else %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" accept=".xlsx" name="excel_file">
+            <button type="submit">Import</button>
+        </form>
+    {% endif %}
+{% endblock content %}

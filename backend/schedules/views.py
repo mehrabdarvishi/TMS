@@ -13,6 +13,10 @@ from .models import Instructor, Semester, Program, Course, CourseSession, Progra
 from .forms import CourseForm, SemesterForm
 from .utils import overlapping_sessions_wrapped
 
+class IndexView(TemplateView):
+    template_name = 'schedules/index.html'
+
+
 class SemesterCreateView(SuccessMessageMixin, CreateView):
     model = Semester
     form_class = SemesterForm
@@ -101,8 +105,7 @@ class ProgramDetailView(DetailView):
         program_code, semester_code = self.kwargs.get('program_code'), self.kwargs.get('semester_code')
         semester = Semester.objects.get(code=semester_code)
         return Program.objects.get(code=program_code, semester=semester)
-        
-
+    
 class ProgramUpdateView(SuccessMessageMixin, UpdateView):
     model = Program
     fields = ['code', 'title']
@@ -221,11 +224,19 @@ class CourseDeleteView(SuccessMessageMixin, DeleteView):
         }
         return reverse_lazy('schedules:program-detail', kwargs=kwargs)
 
-class CourseSessionCreateView(CreateView):
+class CourseSessionCreateView(SuccessMessageMixin, CreateView):
     model = CourseSession
     fields = ['location', 'start_time', 'end_time', 'weekday']
     template_name = 'schedules/course_session_form.html'
-    
+    success_message = '%(success_message)s'
+
+    def get_success_message(self, cleaned_data):
+        
+        return self.success_message % dict(
+            cleaned_data,
+            success_message = f'جلسه { self.object.get_weekday_display() } { self.object.start_time.isoformat(timespec='minutes') } - { self.object.end_time.isoformat(timespec='minutes') } با موفقیت افزوده شد.',
+        )
+  
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -237,10 +248,19 @@ class CourseSessionCreateView(CreateView):
         semester_code, program_code, course_id = self.kwargs.get('semester_code'), self.kwargs.get('program_code'), self.kwargs.get('course_id')
         return reverse_lazy('schedules:course-detail', kwargs={'semester_code': semester_code, 'program_code': program_code, 'course_id':course_id})
 
-class CourseSessionUpdateView(UpdateView):
+class CourseSessionUpdateView(SuccessMessageMixin, UpdateView):
     model = CourseSession
     fields = ['location', 'start_time', 'end_time', 'weekday']
     template_name = 'schedules/course_session_update_form.html'
+    success_message = '%(success_message)s'
+
+    def get_success_message(self, cleaned_data):
+        
+        return self.success_message % dict(
+            cleaned_data,
+            success_message = f'جلسه درسی با موفقیت به‌روزرسانی شد.',
+        )
+
 
     def get_object(self) -> Model:
         # Getting the object using all of the url params (Instead of just using the course id.) for ensuring a completely valid url.
@@ -257,9 +277,18 @@ class CourseSessionUpdateView(UpdateView):
         }
         return reverse_lazy('schedules:course-detail', kwargs=kwargs)
 
-class CourseSessionDeleteView(DeleteView):
+class CourseSessionDeleteView(SuccessMessageMixin, DeleteView):
     model = CourseSession
     template_name = 'schedules/course_session_confirm_delete.html'
+    success_message = '%(success_message)s'
+
+    def get_success_message(self, cleaned_data):
+        
+        return self.success_message % dict(
+            cleaned_data,
+            success_message = f'جلسه { self.object.get_weekday_display() } { self.object.start_time } - { self.object.end_time } با موفقیت حذف شد.',
+        )
+
 
     def get_object(self) -> Model:
         semester = Semester.objects.get(code=self.kwargs.get('semester_code'))
@@ -276,13 +305,47 @@ class CourseSessionDeleteView(DeleteView):
         }
         return reverse_lazy('schedules:course-detail', kwargs=kwargs)
 
-class InstructorCreateView(CreateView):
+class InstructorCreateView(SuccessMessageMixin, CreateView):
     model = Instructor
     fields = ['first_name', 'last_name']
-    success_url = reverse_lazy('schedules:instructor-create')
+    success_url = reverse_lazy('schedules:instructor-list')
+    success_message = 'مدرس "%(instructor)s" با موفقیت افزوده شد.'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            instructor = f'{self.object.first_name} {self.object.last_name}',
+        )
+
 
 class InstructorListView(ListView):
     model = Instructor
+
+class InstructorUpdateView(SuccessMessageMixin, UpdateView):
+    model = Instructor
+    fields = '__all__'
+    template_name = 'schedules/instructor_update_form.html'
+    success_url = reverse_lazy('schedules:instructor-list')
+    success_message = 'مدرس "%(instructor)s" با موفقیت به‌روزرسانی شد.'
+
+    def get_success_message(self, cleaned_data):
+        
+        return self.success_message % dict(
+            cleaned_data,
+            instructor = f'{self.object.first_name} {self.object.last_name}',
+        )
+
+
+class InstructorDeleteView(SuccessMessageMixin, DeleteView):
+    model = Instructor
+    success_url = reverse_lazy('schedules:instructor-list')
+    success_message = 'مدرس "%(instructor)s" با موفقیت حذف شد.'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            instructor = f'{self.object.first_name} {self.object.last_name}',
+        )
 
 
 class ProgramTitleCreateView(CreateView):
@@ -337,13 +400,17 @@ class ProgramSchedule(View):
         courses = program.course_set.all()
         program_sessions = CourseSession.objects.filter(course__in=courses).order_by('start_time')
         context = {
-            'saturday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='ش').all()),
-            'sunday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='ی').all()),
-            'monday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='د').all()),
-            'tuesday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='س').all()),
-            'wednesday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='چ').all()),
-            'thursday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='پ').all()),
-            'friday_sessions': overlapping_sessions_wrapped(program_sessions.filter(weekday='ج').all()),
+            'saturday_sessions': program_sessions.filter(weekday='ش'),
+            'sunday_sessions': program_sessions.filter(weekday='ی'),
+            'monday_sessions': program_sessions.filter(weekday='د').all(),
+            'tuesday_sessions': program_sessions.filter(weekday='س').all(),
+            'wednesday_sessions': program_sessions.filter(weekday='چ').all(),
+            'thursday_sessions': program_sessions.filter(weekday='پ').all(),
+            'friday_sessions': program_sessions.filter(weekday='ج').all(),
+            'educational_year': f'{semester.year_start} - {semester.year_start + 1}',
+            'program_code': program.code,
+            'semester_start_date': f'{semester.year_start}/{semester.month_start}/{semester.day_start}',
+            'semester_end_date': f'{semester.year_end}/{semester.month_end}/{semester.day_end}',
         }
         return render(request, 'schedules/program_schedule.html', context=context)
     

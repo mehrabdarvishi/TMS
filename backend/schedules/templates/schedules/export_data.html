@@ -1,5 +1,15 @@
 {% extends 'base/base.html' %}
+{% load svg %}
 
 {% block content %}
-<h3><a href="{% url 'schedules:export-data-to-excel' %}">Excel</a></h3>
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <a href="{% url 'schedules:export-data-to-excel' %}" style="display: inline-block; text-decoration: none; color: #000;">
+        <div style="display: flex; flex-direction: column;">
+            {% svg 'microsoft-excel-icon' %}
+            <div>
+                Excel
+            </div>
+        </div>
+    </a>
+</div>
 {% endblock content %}

@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load svg %}
 
 
 {% block link %}
@@ -8,17 +9,22 @@
 
 {% block content %}
     {% if object_list %}
-        <div class="new-semester" style="text-align: left;">
-            <a href="{% url 'schedules:semester-create' %}" class="new-semester">ایجاد ترم جدید</a>
-        </div>
-        <div style="text-align: right; margin-bottom: 2rem; font-size: 1.4rem;">
-            <h2>استاد مورد نظر را برای مشاهده اطلاعات انتخاب کنید.</h2>
-        </div>
-        <div class="semester-list">
+        <a href="{% url 'schedules:instructor-create' %}" style="display: inline-block; position: absolute; left: 0; text-decoration: none; color: #fff; background-color: rgb(0, 66, 44); padding-inline: .5rem; padding-block: .3rem; border-radius: 5px;">
+            <div style="display: flex; gap: .5rem; align-items: center;">
+                {% svg 'plus-square-line-icon' %}
+                <p>افزودن مدرس جدید</p>
+            </div>
+        </a>
+        <h2 style="text-align: center; font-size: 1.4rem; margin-bottom: 4rem;">اساتید دروس:</h2>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem;">
             {% for instructor in object_list %}
-                <a href="">
-                    {{ instructor.first_name }} {{ instructor.last_name }}
-                </a>
+                <div style="display: flex; gap: 2rem;">
+                    <p style="font-size: 1.2rem; text-decoration: none; color: #000; cursor: default;">
+                        {{ instructor.first_name }} {{ instructor.last_name }}
+                    </p>
+                    <a href="{% url 'schedules:instructor-update' pk=instructor.id %}" style="text-decoration: none;" title="ویرایش">{% svg 'pencil-icon' %}</a>
+                    <a href="{% url 'schedules:instructor-delete' pk=instructor.id %}" style="text-decoration: none;" title="حذف">{% svg 'recycle-bin-icon' %}</a>
+                </div>
             {% endfor %}
         </div>
     {% else %}

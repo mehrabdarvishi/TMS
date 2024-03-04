@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load svg %}
+
+{% block content %}
+    <div style="display: flex; flex-direction: column; gap: 4rem; align-items: center;">
+        <a href="{% url 'schedules:semester-list' %}" style="width: 15rem; display: flex; justify-content: center; align-items: center; gap: 1rem; font-size: 2.5rem; text-decoration: none; background-color: rgb(147, 255, 165); color: #000; padding-inline: 4rem; padding-block: 2rem; border-radius: 5px;">
+            <div>
+                انتخاب ترم
+            </div>
+            {% svg 'check-mark-box-icon' %}
+        </a>
+        <a href="{% url 'schedules:export-data' %}" style="width: 15rem; display: flex; justify-content: center; align-items: center; gap: 1rem; font-size: 2.5rem; text-decoration: none; background-color: rgb(147, 203, 255); color: #000; padding-inline: 4rem; padding-block: 2rem; border-radius: 5px;">
+            <div>
+                دریافت اطلاعات
+            </div>
+            {% svg 'cloud-download-icon' %}
+        </a>
+        <a href="" style="width: 15rem; display: flex; justify-content: center; align-items: center; gap: 1rem; font-size: 2.5rem; text-decoration: none; background-color: rgb(255, 235, 147); color: #000; padding-inline: 4rem; padding-block: 2rem; border-radius: 5px;">
+            <div>
+                بارگزاری اطلاعات
+            </div>
+            {% svg 'database-upload-icon' %}
+        </a>
+    </div>
+{% endblock content %}

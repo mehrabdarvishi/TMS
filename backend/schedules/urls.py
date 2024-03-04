@@ -4,6 +4,7 @@ from . import views
 app_name = 'schedules'
 
 urlpatterns = [
+    path('', views.IndexView.as_view(), name='index'),
     path('semester/', views.SemesterListView.as_view(), name='semester-list'),
     path('semester/new/', views.SemesterCreateView.as_view(), name='semester-create'),
     path('semester/<slug:semester_code>/', views.SemesterDetailView.as_view(), name='semester-detail'),
@@ -39,17 +40,19 @@ urlpatterns = [
 
     path('instructor/new/', views.InstructorCreateView.as_view(), name='instructor-create'),
     path('instructor/', views.InstructorListView.as_view(), name='instructor-list'),
+    path('instructor/<int:pk>/update/', views.InstructorUpdateView.as_view(), name='instructor-update'),
+    path('instructor/<int:pk>/delete/', views.InstructorDeleteView.as_view(), name='instructor-delete'),
     path('course-title/new/', views.CourseTitleCreateView.as_view(), name='course-title-create'),
     path('course-title/', views.CourseTitleListView.as_view(), name='course-title-list'),
     path('program-title/', views.ProgramTitleListView.as_view(), name='program-title-list'),
     path('program-title/<int:pk>/update/', views.ProgramTitleUpdateView.as_view(), name='program-title-update'),
     path('program-title/<int:pk>/delete/', views.ProgramTitleDeleteView.as_view(), name='program-title-delete'),
-    path('program-title/new', views.ProgramTitleCreateView.as_view(), name='program-title-create'),
+    path('program-title/new/', views.ProgramTitleCreateView.as_view(), name='program-title-create'),
 
 
 
     path('export-data/', views.ExportDataTemplateView.as_view(), name='export-data'),
     path('export-data/excel/', views.export_data_to_excel, name='export-data-to-excel'),
-
+    #path('import-data')
     #path('spreadsheet/upload/')
 ]

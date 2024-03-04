@@ -98,5 +98,15 @@ class CourseSession(models.Model):
         end_minutes = self. end_time.hour*60 + self.end_time.minute
         return end_minutes - start_minutes
     
-    def schedule_field_width(self):
-        return f'{self.duration_in_minutes()*1.7}px'
+
+    def duration_in_seconds(self):
+        start_seconds = self.start_time.hour * 3600 + self.start_time.minute * 60
+        end_seconds = self.end_time.hour * 3600 + self.end_time.minute * 60
+        return end_seconds - start_seconds
+
+    def schedule_session_width(self):
+        return f'{self.duration_in_seconds()/40}px'
+
+
+    def starting_point(self):
+        return f'{((self.start_time.hour * 3600 + self.start_time.minute * 60)/40)-600}px'

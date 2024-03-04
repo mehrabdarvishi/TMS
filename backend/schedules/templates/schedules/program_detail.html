@@ -13,14 +13,17 @@
     <p>ترم: {{ program.semester }}</p>
 </div>
 
+<a href="{% url 'schedules:program-schedule' semester_code=program.semester.code program_code=program.code %}">
+    دریافت برنامه هفتگی
+</a>
 
 {% if program.course_set.all %}
     <a href="{% url 'schedules:course-create' semester_code=program.semester program_code=program.code %}" style="position: absolute; top: 0; left: 0; font-size: 1.1rem; text-decoration: none; color: #0032d8;">افزودن درس جدید</a>
     <h3 style="text-align: right; font-size: 1.5rem; margin-bottom: 2rem;">لیست درس‌های دوره:</h3>
     <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
         {% for course in program.course_set.all %}
-            <a href="{% url 'schedules:course-detail' semester_code=program.semester program_code=program.code course_id=course.id %}" style="font-size: 1.5rem; text-decoration: none; color: #f1f1f1;">
-                <div style="background-color: #004b0c; width: 8em; text-align: center; padding: 1rem; display: flex; flex-direction: column; gap: .7rem; border-radius: 5px;">
+            <a href="{% url 'schedules:course-detail' semester_code=program.semester program_code=program.code course_id=course.id %}" style="align-self: stretch; background-color: #004b0c; font-size: 1.5rem; text-decoration: none; color: #f1f1f1; border-radius: 5px;">
+                <div style="width: 8em; text-align: center; padding: 1rem; display: flex; flex-direction: column; gap: .7rem; border-radius: 5px; justify-content: center;">
                     <p>
                         {{ course.title }}
                     </p>

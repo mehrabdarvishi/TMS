@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static '/styles/form.css' %}">
+{% endblock link %}
+
+{% block content %}
+
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; margin-bottom: 3rem; font-size: 1.5rem;">
+        <p>آیا از حذف مدرس "{{ object.first_name }} {{ object.last_name }}" از اطمینان دارید؟</p>
+    </div>
+    <div class="delete-form">
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <div style="display: flex; gap: 2rem; justify-content: center; align-items: center;">
+                <input type="submit" value="تایید">
+                <a href="{% url 'schedules:instructor-list' %}" class="cancel-btn">
+                        انصراف
+                </a>    
+            </div>
+        </form>    
+    </div>
+{% endblock content %}
