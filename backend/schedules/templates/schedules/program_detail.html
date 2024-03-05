@@ -1,4 +1,6 @@
 {% extends 'base/base.html' %}
+{% load svg %}
+
 {% block content %}
 <h3 style="text-align: center; font-size: 1.5rem; margin-bottom: 1.2rem;">
      اطلاعات دوره
@@ -10,12 +12,15 @@
 <div dir="rtl" style="display: flex; flex-direction: column; gap: .7em; font-size: 1.3rem; text-align: center; margin-bottom: 2rem;">
     <p>کد دوره: {{ program.code }}</p>
     <p>عنوان: {{ program.title }}</p>
-    <p>ترم: {{ program.semester }}</p>
+    <p>ترم: <a href="{% url 'schedules:semester-detail' semester_code=program.semester %}" style="text-decoration: none; color: #0032d8;" dir="rtl">{{ program.semester }}</a></p>
+    <p>
+        <a href="{% url 'schedules:program-schedule' semester_code=program.semester.code program_code=program.code %}" style="text-decoration: none; color: #0032d8;">
+            {% svg 'table-icon' %}
+            دریافت برنامه هفتگی
+        </a>
+    </p>
 </div>
 
-<a href="{% url 'schedules:program-schedule' semester_code=program.semester.code program_code=program.code %}">
-    دریافت برنامه هفتگی
-</a>
 
 {% if program.course_set.all %}
     <a href="{% url 'schedules:course-create' semester_code=program.semester program_code=program.code %}" style="position: absolute; top: 0; left: 0; font-size: 1.1rem; text-decoration: none; color: #0032d8;">افزودن درس جدید</a>

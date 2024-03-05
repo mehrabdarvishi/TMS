@@ -14,7 +14,12 @@
     {% with sessions=course.coursesession_set.all %}
         <div dir="rtl" style="display: flex; flex-direction: column; gap: .7em; font-size: 1.3rem; text-align: center; margin-bottom: 2rem;">
             <p>عنوان درس: {{ course.title }} {% if course.group %}(<span style="color: #ff1d1d;">گروه {{ course.group }}</span>){% endif %}</p>
-            <p>دوره: {{ course.program }}</p>
+            <p>
+                دوره:
+                <a href="{% url 'schedules:program-detail' semester_code=course.program.semester program_code=course.program %}" style="text-decoration: none; color: #0032d8;">
+                    {{ course.program }}
+                </a>
+            </p>
             <p>مدرس: {{ course.instructor }}</p>
             <p>نمره ارزیابی مدرس: {% if course.instructor_evaluation_grade %}{{course.instructor_evaluation_grade}}{% else %}ثبت نشده{%endif%}</p>
             <p>تعداد جلسات هفتگی: {{ sessions|length }} جلسه</p>
