@@ -234,7 +234,7 @@ class CourseSessionCreateView(SuccessMessageMixin, CreateView):
         
         return self.success_message % dict(
             cleaned_data,
-            success_message = f'جلسه { self.object.get_weekday_display() } { self.object.start_time.isoformat(timespec='minutes') } - { self.object.end_time.isoformat(timespec='minutes') } با موفقیت افزوده شد.',
+            success_message = f'جلسه { self.object.get_weekday_display() } { self.object.start_time.isoformat(timespec="minutes") } - { self.object.end_time.isoformat(timespec="minutes") } با موفقیت افزوده شد.',
         )
   
 
