@@ -1,13 +1,31 @@
 {% extends 'base/base.html' %}
-
+{% load static %}
+{% block link %}
+    <link rel="stylesheet" href="{% static 'styles/revenue.css' %}">
+{% endblock link %}
 {% block content %}
-    {% if agg %}
-        {{ agg|safe }}
-    {% else %}
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" accept=".xlsx" name="excel_file">
-            <button type="submit">Import</button>
-        </form>
-    {% endif %}
+    <a href="{% url 'reports:revenue-file-update' %}">
+        <div style="position: absolute; right: 0; font-size: 1.2rem; padding-inline: 2rem; padding-block: 1rem; background-color: rgb(0, 87, 95); color: #f1f1f1; border-radius: 5px; cursor: pointer;">به‌روزرسانی فایل</div>
+    </a>
+    <div style="display: flex; flex-direction: column; gap: 2rem; align-items: center;">
+        <h2 style="font-size: 1.5rem;">گزارش عملکرد</h2>
+        <ul class="chart-navigation-bar" style="display: flex; justify-content: center;">
+            {% for data in revenue_charts %}
+                <li data-chart-variable="{{ data.title }}" style="padding: 2rem; font-size: 1.2rem; min-width: 4rem; text-align: center; cursor: pointer;">{{ data.title }}</li>
+            {% endfor %}
+        </ul>
+        {% if revenue_charts %}
+            {% for data in revenue_charts %}
+                <div class="chart">
+                    <div data-chart-variable="{{ data.title }}" style="display: none;">
+                        {{ data.chart|safe }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 {% endblock content %}
+
+{% block script %}
+    <script src="{% static 'scripts/revenue_charts.js' %}"></script>
+{% endblock script %}

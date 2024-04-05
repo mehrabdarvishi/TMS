@@ -1,0 +1,9 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" accept=".xlsx" name="excel_file">
+        <button type="submit">Import</button>
+    </form>
+{% endblock content %}
